@@ -16,5 +16,6 @@ public class DesktopLauncher {
 		config.title = MyGdxGame.TITLE + " v" + MyGdxGame.VERSION;
 		new LwjglApplication(new MyGdxGame(), config);
 		System.out.println("hello");
+		System.out.println("NYT COMMIT");
 	}
 }
