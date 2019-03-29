@@ -17,5 +17,6 @@ public class DesktopLauncher {
 		System.out.println("hello");
 		System.out.println("COMMIT_vol2");
 		System.out.println("Hej jesper2");
+		System.out.println("yo");
 	}
 }
