@@ -99,9 +99,11 @@ TiledMapTileLayer layer;
             //System.out.println(txtf.getText());
             if(txtf.getText().equals(inputTextLTC) && !isTestCalled){
                 System.out.println("Det virker");
+
                 player.getPosition().add((player.getPosition().x+amountSteps),0);
-                isTestCalled = true;
-                test(1);
+
+                //isTestCalled = true;
+                //test(1);
 
 
             }
