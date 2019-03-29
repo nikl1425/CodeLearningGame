@@ -34,6 +34,9 @@ int x = 640;
 int y = 0;
 int width = 240;
 int height = 880;
+int amountSteps;
+
+boolean isTestCalled = false;
 
 int w = 32;
 
@@ -52,6 +55,7 @@ TiledMapTileLayer layer;
 
 @Override
     public void render(float delta) {
+        //delta = 0.05f;
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.setView(camera);
@@ -87,13 +91,20 @@ TiledMapTileLayer layer;
         /////////
         //DEBUG//
         /////////
-        String inputTextLTC ="step 10";
+        amountSteps = 5;
 
-        if(Gdx.input.isKeyPressed(21)){
+        String inputTextLTC ="gå frem: "+amountSteps;
+
+        if(Gdx.input.isTouched()){
             //System.out.println(txtf.getText());
-            if(txtf.getText().equals(inputTextLTC)){
+            if(txtf.getText().equals(inputTextLTC) && !isTestCalled){
                 System.out.println("Det virker");
-                player.getPosition().add(player.getPosition().x+1f*delta,0);
+
+                player.getPosition().add((player.getPosition().x+amountSteps),0);
+
+                //isTestCalled = true;
+                //test(1);
+
 
             }
         }
@@ -169,4 +180,16 @@ TiledMapTileLayer layer;
     shape.dispose();
 
     }
+
+    static class Counter {
+        public static int count = 0;
+    }
+
+    private void test(int limit){
+        if(++Counter.count <=limit){
+            System.out.println("test!"+limit);
+        }
+        Counter.count = 0;
+    }
+
 }
