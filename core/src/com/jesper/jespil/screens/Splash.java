@@ -56,6 +56,7 @@ public class Splash implements Screen {
         splash.setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()-200);
 
 
+
         //Bruges til fade ind og ud på intro logo
         Tween.set(splash, SpriteAccessor.ALPHA).target(0).start(tweenManager); //loader tweenmanager
         Tween.to(splash, SpriteAccessor.ALPHA, 2).target(1).repeatYoyo(1,0.5f).setCallback(new TweenCallback() {
@@ -64,6 +65,9 @@ public class Splash implements Screen {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
             }
         }).start(tweenManager); //fade in/out (repeatYoyo fader ud)
+
+
+
 
     }
 

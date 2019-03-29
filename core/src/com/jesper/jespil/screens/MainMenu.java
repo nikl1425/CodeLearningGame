@@ -163,8 +163,8 @@ public class MainMenu implements Screen {
                 .end().start(tweenManager);
 
         // table fade-in
-        Tween.from(table, ActorAccessor.ALPHA, .5f).target(0).start(tweenManager);
-        Tween.from(table, ActorAccessor.Y, .5f).target(Gdx.graphics.getHeight()/8).start(tweenManager);
+        Tween.from(table, ActorAccessor.ALPHA, .5f).target(5).start(tweenManager);
+        Tween.from(table, ActorAccessor.Y, 2.5f).target(Gdx.graphics.getHeight()/8).start(tweenManager);
     }
 
 

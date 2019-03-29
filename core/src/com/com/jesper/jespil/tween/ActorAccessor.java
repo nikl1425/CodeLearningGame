@@ -5,12 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class ActorAccessor implements TweenAccessor<Actor> {
 
-    public static final int Y = 0, RGB = 1, ALPHA = 2;
-
+    public static final int Y = 0, X = 1, RGB = 2, ALPHA = 3;
 
     @Override
     public int getValues(Actor target, int tweenType, float[] returnValues) {
         switch(tweenType){
+
+            case X:
+                returnValues[0] = target.getX();
+                return 1;
             case Y:
                 returnValues[0] = target.getY();
                 return 1;
@@ -33,6 +36,9 @@ public class ActorAccessor implements TweenAccessor<Actor> {
         switch (tweenType){
             case Y:
                 target.setY(newValues[0]);
+                break;
+            case X:
+                target.setX(newValues[0]);
                 break;
             case RGB:
                 target.setColor(newValues[0], newValues[1], newValues[2], target.getColor().a);

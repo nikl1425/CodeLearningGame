@@ -14,7 +14,7 @@ public class imageClass {
 
     public void loadTextures() {
         backgroundTexture = new Texture("download.jpeg");
-        backgroundSprite =new Sprite(backgroundTexture);
+        backgroundSprite = new Sprite(backgroundTexture);
         backgroundSprite.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
     }
 }
