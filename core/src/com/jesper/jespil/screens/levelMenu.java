@@ -113,11 +113,9 @@ public class levelMenu implements Screen {
 
         setupTable();
         stage.addActor(table);
-
-
     }
 
-<
+
 
     @Override
     public void resize(int width, int height) {
