@@ -55,7 +55,7 @@ TiledMapTileLayer layer;
 
 @Override
     public void render(float delta) {
-        delta = 0.05f;
+        //delta = 0.05f;
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.setView(camera);
@@ -101,7 +101,8 @@ TiledMapTileLayer layer;
                 System.out.println("Det virker");
                 player.getPosition().add((player.getPosition().x+amountSteps),0);
                 isTestCalled = true;
-                test();
+                test(1);
+
 
             }
         }
@@ -178,9 +179,15 @@ TiledMapTileLayer layer;
 
     }
 
-    private void test()
-    {
-        System.out.println("test!");
+    static class Counter {
+        public static int count = 0;
+    }
+
+    private void test(int limit){
+        if(++Counter.count <=limit){
+            System.out.println("test!"+limit);
+        }
+        Counter.count = 0;
     }
 
 }
