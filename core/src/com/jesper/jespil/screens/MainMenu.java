@@ -49,6 +49,7 @@ public class MainMenu implements Screen {
         tweenManager.update(delta);
 
 
+
         stage.act(delta); //opdater alt i stage (stage har table - derfor opdateres det også ,og alt deri)
         stage.draw(); //Her tegner vi hele lortet
     }
