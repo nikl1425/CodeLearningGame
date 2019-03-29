@@ -1,9 +1,7 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.Levels.LevelClass;
 import com.badlogic.gdx.Game;
-import com.jesper.jespil.screens.MainMenu;
-import com.jesper.jespil.screens.Splash;
 
 
 public class MyGdxGame extends Game {
@@ -12,7 +10,7 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void create () {
-		setScreen(new MainMenu());
+		setScreen(new LevelClass());
 		System.out.println("hej");
 
 	} //sæt til splash for startskærm

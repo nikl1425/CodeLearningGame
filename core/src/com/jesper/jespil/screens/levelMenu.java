@@ -85,7 +85,6 @@ public class levelMenu implements Screen {
 
         play = new TextButton("PLAY", skin);
         play.pad(15);
-
         play.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
