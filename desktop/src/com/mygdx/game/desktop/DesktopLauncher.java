@@ -16,6 +16,6 @@ public class DesktopLauncher {
 		new LwjglApplication(new MyGdxGame(), config);
 		System.out.println("hello");
 		System.out.println("COMMIT_vol2");
-		System.out.println("Hej jesper");
+		System.out.println("Hej jesper2");
 	}
 }
