@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="left-down" width="20" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" name="terrain" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
+  <image source="terrain.png" width="1024" height="1024"/>
+ </tileset>
+ <layer id="1" name="Ground" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzjZWRg4KMS5gdiXSDWoxLWHzVv1LxR80bNGzWPaub5ArEflbA/EAMARDlJcQ==
+  </data>
+ </layer>
+ <layer id="2" name="Blocked" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFgw1cYGRguEghvsSIMO8DkP2RQvwJyTwBJgYGQQqxEBP9w3UUjIJRQF0AADjIIR8=
+  </data>
+ </layer>
+ <layer id="3" name="Objectives" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFQxHEMVLXvDoqmzePyuaNglEwCgYfAAA57wF+
+  </data>
+ </layer>
+</map>

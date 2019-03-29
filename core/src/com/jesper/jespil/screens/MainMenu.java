@@ -1,8 +1,5 @@
 package com.jesper.jespil.screens;
 
-import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -17,7 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.com.jesper.jespil.tween.ActorAccessor;
-import com.mygdx.game.MyGdxGame;
+
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 
 import static com.badlogic.gdx.Gdx.gl20;
 
@@ -94,6 +94,7 @@ public class MainMenu implements Screen {
         });
         buttonPlay.pad(25);
 
+        //Creating button SETTINGS
         buttonSettings = new TextButton("SETTINGS", skin);
         buttonSettings.addListener(new ClickListener(){
             @Override
@@ -101,8 +102,6 @@ public class MainMenu implements Screen {
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
             }
         });
-
-
 
         //Creating buttons (EXIT
         buttonExit = new TextButton("EXIT", skin);
@@ -117,10 +116,6 @@ public class MainMenu implements Screen {
             }
         });
         buttonExit.pad(25);
-
-
-
-
 
 
 
