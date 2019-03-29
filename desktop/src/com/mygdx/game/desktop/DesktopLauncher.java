@@ -9,8 +9,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.useGL30 = true;
-		config.width = 1280;
-		config.height = 720;
+		config.width = 880;
+		config.height = 640;
 		config.vSyncEnabled = true; // Setting to false disables vertical sync
 		config.title = MyGdxGame.TITLE + " v" + MyGdxGame.VERSION;
 		new LwjglApplication(new MyGdxGame(), config);

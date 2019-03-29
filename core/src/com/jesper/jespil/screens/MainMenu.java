@@ -75,7 +75,7 @@ public class MainMenu implements Screen {
         table = new Table(skin);
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        //Creating heading
+            //Creating heading
         heading = new Label(Menu, skin);
         heading.setFontScale(2);
 
@@ -181,7 +181,7 @@ public class MainMenu implements Screen {
 
     @Override
     public void hide() {
-
+        dispose();
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.mygdx.game.MyGdxGame;
 
 
 public class levelMenu implements Screen {
@@ -83,7 +84,14 @@ public class levelMenu implements Screen {
         scrollPane = new ScrollPane(list, skin);
 
         play = new TextButton("PLAY", skin);
+        play.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.jesper.jespil.screens.Game());
+            }
+        });
         play.pad(15);
+
 
         back = new TextButton("BACK", skin);
         back.pad(10);
@@ -115,7 +123,9 @@ public class levelMenu implements Screen {
 
     @Override
     public void pause() {
-
+       /* Gdx.app.getPreferences(MyGdxGame.TITLE).putBoolean("fullscreen", true);
+        Gdx.app.getPreferences(MyGdxGame.TITLE).getBoolean("fullscreen");
+        Gdx.app.getPreferences(MyGdxGame.TITLE).flush();*/
     }
 
     @Override
@@ -126,6 +136,7 @@ public class levelMenu implements Screen {
     @Override
     public void hide() {
 
+        dispose();
     }
 
     @Override
