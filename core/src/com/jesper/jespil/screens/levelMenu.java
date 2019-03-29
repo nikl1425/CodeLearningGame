@@ -1,5 +1,6 @@
 package com.jesper.jespil.screens;
 
+import com.Levels.LevelClass;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -84,6 +85,12 @@ public class levelMenu implements Screen {
 
         play = new TextButton("PLAY", skin);
         play.pad(15);
+        play.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new LevelClass());
+            }
+        });
 
         back = new TextButton("BACK", skin);
         back.pad(10);
