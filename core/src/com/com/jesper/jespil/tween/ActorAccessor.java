@@ -1,7 +1,8 @@
 package com.com.jesper.jespil.tween;
 
-import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+
+import aurelienribon.tweenengine.TweenAccessor;
 
 public class ActorAccessor implements TweenAccessor<Actor> {
 
