@@ -2,7 +2,6 @@ package com.jesper.jespil.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -13,18 +12,14 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gameObjects.playerClass;
-import javafx.scene.shape.Box;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JTextField;
 
 public class Game implements Screen {
 
@@ -39,6 +34,11 @@ int x = 640;
 int y = 0;
 int width = 240;
 int height = 880;
+
+int w = 32;
+
+private TextArea txtf;
+
 private playerClass player;
 private Skin skin;
 private TextureAtlas atlas;
@@ -61,24 +61,48 @@ TiledMapTileLayer layer;
         shape.rect(x,y,width,height);
         shape.end();
 
+        /////////
+        //DEBUG//
+        /////////
+        int tileWidth = map.getProperties().get("tilewidth", Integer.class), tileHeight = map.getProperties().get("tileheight", Integer.class);
+        int mapWidth = map.getProperties().get("width", Integer.class) * tileWidth, mapHeight = map.getProperties().get("height", Integer.class) * tileHeight;
+        shape.setProjectionMatrix(camera.combined);
+        shape.begin(ShapeRenderer.ShapeType.Line);
+        for(int x = 0; x < mapWidth; x += tileWidth)
+            shape.line(x, 0, x, mapHeight);
+        for(int y = 0; y < mapHeight; y += tileHeight)
+            shape.line(0, y, mapWidth, y);
+        shape.end();
+        /////////
+        //DEBUG//
+        /////////
 
+        if(Gdx.input.isTouched()){
+            Vector3 click = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(click);
+            TiledMapTileLayer.Cell clicked = layer.getCell((int)click.x/w, (int)click.y/w);
+            //System.out.println(clicked);
+            //System.out.println(Gdx.input.getX() + "," + Gdx.input.getY());
+        }
+        /////////
+        //DEBUG//
+        /////////
+        String inputTextLTC ="step 10";
 
-    int tileWidth = map.getProperties().get("tilewidth", Integer.class), tileHeight = map.getProperties().get("tileheight", Integer.class);
-    int mapWidth = map.getProperties().get("width", Integer.class) * tileWidth, mapHeight = map.getProperties().get("height", Integer.class) * tileHeight;
-    shape.setProjectionMatrix(camera.combined);
-    shape.begin(ShapeRenderer.ShapeType.Line);
-    for(int x = 0; x < mapWidth; x += tileWidth)
-        shape.line(x, 0, x, mapHeight);
-    for(int y = 0; y < mapHeight; y += tileHeight)
-        shape.line(0, y, mapWidth, y);
-    shape.end();
+        if(Gdx.input.isKeyPressed(21)){
+            //System.out.println(txtf.getText());
+            if(txtf.getText().equals(inputTextLTC)){
+                System.out.println("Det virker");
+                player.getPosition().add(player.getPosition().x+1f*delta,0);
 
+            }
+        }
 
 
 
         player.update(delta);
         spriteBatch.begin();
-        spriteBatch.draw(player.getPlayer(), player.getPosition().x, player.getPosition().y);
+        spriteBatch.draw(player.getPlayer(), player.getPosition().x, player.getPosition().y, w, w);
         spriteBatch.end();
 
         stage.draw();
@@ -92,10 +116,15 @@ TiledMapTileLayer layer;
 
     @Override
     public void show() {
+        spriteBatch = new SpriteBatch();
+
+        player = new playerClass(5*w,5*w);
         atlas = new TextureAtlas("ui/atlas.pack"); //Bruges til textbutton
         skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), atlas); //Bruges til textbutton
         this.stage = new Stage();
-        TextArea txtf = new TextArea("gå frem:", skin);
+
+
+        txtf = new TextArea("gå frem:", skin);
         txtf.setSize(240,640);
         txtf.setPosition(640,0);
 
@@ -103,19 +132,17 @@ TiledMapTileLayer layer;
         Gdx.input.setInputProcessor(this.stage);
 
 
-
-    tiledMapCell = new TiledMapTileLayer.Cell();
-    spriteBatch = new SpriteBatch();
-        player = new playerClass(20,20);
         map = new TmxMapLoader().load("maps/tiledmap.tmx");
-        layer = (TiledMapTileLayer) map.getLayers().get(0);
         renderer = new OrthogonalTiledMapRenderer(map);
+        layer = (TiledMapTileLayer) map.getLayers().get(0);
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shape = new ShapeRenderer();
 
+        System.out.println(layer+"LAYERLOL");
 
-
+        //System.out.println(layer.getCell(1,1));
 
 
 

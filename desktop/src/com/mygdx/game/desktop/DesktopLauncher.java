@@ -14,9 +14,5 @@ public class DesktopLauncher {
 		config.vSyncEnabled = true; // Setting to false disables vertical sync
 		config.title = MyGdxGame.TITLE + " v" + MyGdxGame.VERSION;
 		new LwjglApplication(new MyGdxGame(), config);
-		System.out.println("hello");
-		System.out.println("COMMIT_vol2");
-		System.out.println("Hej jesper2");
-		System.out.println("yo");
 	}
 }
