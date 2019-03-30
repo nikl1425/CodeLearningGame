@@ -74,12 +74,11 @@ public class Game implements Screen {
                     System.out.println(line);
 
                     textInputField.textButton.setText("Compiling!");
-
+//GÅ HØJRE ELLER VENSTRE
                     if (line.startsWith("walk(") && line.endsWith(");")) {
 
                         line = line.replace("walk(", "");
                         line = line.replace(");", "");
-                        System.out.println(line);
 
                         int i = Integer.parseInt(line);
                         startPosX = endPosX;
@@ -87,14 +86,11 @@ public class Game implements Screen {
                         endPosX = startPosX + i * 32;
                         endPosY = startPosY + i * 32;
 
-
                         stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY));
                     }
 
+
                 }
-
-
-
             }
         });
 
