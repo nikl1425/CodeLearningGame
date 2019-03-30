@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gameObjects.playerClass;
 
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -26,12 +27,13 @@ public class Game implements Screen {
     Texture texture;
     Sprite sprite;
 
+
     Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
     Vector2 movement = new Vector2();
     Vector2 touch = new Vector2();
     Vector2 dir = new Vector2();
-    Stack stack = new Stack();
+    private LinkedList<CommandsToExec> stackOfCommands = new LinkedList<CommandsToExec>();
 
 
     Vector3 temp = new Vector3();
@@ -62,40 +64,39 @@ public class Game implements Screen {
             @Override
             public void clicked(InputEvent e, float x, float y) {
 
-                stack.push(sprite.getX());
-                while (!stack.isEmpty()) {
-                    for (String line : textInputField.textArea.getText().split("\\n")) {
-                        textInputField.textButton.setText("Compiling!");
-                        String textStr = textInputField.textArea.getText();
-                        Matcher matcher = Pattern.compile("\\d+").matcher(textStr);
-                        matcher.find();
-                        int i = Integer.valueOf(matcher.group());
-                        float startPosX = sprite.getX();
-                        float startPosY = sprite.getY();
-                        float endPosX = sprite.getX() + i * 32;
-                        float endPosY = sprite.getY() + i * 32;
-                        stack.push(startPosX);
+                float startPosX;
+                float startPosY;
 
-                        if (!(startPosX == endPosX)) {
-                            if (line.equals("walk(" + i + ");")) {
-                                touch.set(sprite.getX() + i * 32, sprite.getY());
-                                System.out.println(i);
+                float endPosX = sprite.getX();
+                float endPosY = sprite.getY();
 
-                            }
-                            if (line.equals("walk -" + i)) {
-                                touch.set(sprite.getX() + -i * 32, sprite.getY());
-                                System.out.println(i);
-                            }
+                for (String line : textInputField.textArea.getText().split("\\n")) {
+                    System.out.println(line);
 
-                            if (startPosX == endPosX) {
-                                stack.pop();
-                            }
-                        }
+                    textInputField.textButton.setText("Compiling!");
+
+                    if (line.startsWith("walk(") && line.endsWith(");")) {
+
+                        line = line.replace("walk(", "");
+                        line = line.replace(");", "");
+                        System.out.println(line);
+
+                        int i = Integer.parseInt(line);
+                        startPosX = endPosX;
+                        startPosY = endPosY;
+                        endPosX = startPosX + i * 32;
+                        endPosY = startPosY + i * 32;
+
+
+                        stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY));
                     }
+
                 }
+
+
+
             }
         });
-
 
     }
 
@@ -152,6 +153,15 @@ public class Game implements Screen {
         //player.update(delta);
         textInputField.render(delta);
 
+        if (!stackOfCommands.isEmpty()) {
+            CommandsToExec cte = stackOfCommands.get(0);
+            touch.set(cte.getDestPosX(), cte.getDestPosY());
+            cte.setExecuted(true);
+
+            if (sprite.getX() == cte.getDestPosX() && sprite.getY() == cte.getDestPosY()) {
+                stackOfCommands.removeFirst();
+            }
+        }
         position.set(sprite.getX(), sprite.getY());
         dir.set(touch).sub(position).nor();
         velocity.set(dir).scl(speed);
@@ -177,8 +187,6 @@ public class Game implements Screen {
                 }
             }
         }
-
-
     }
 
     @Override
