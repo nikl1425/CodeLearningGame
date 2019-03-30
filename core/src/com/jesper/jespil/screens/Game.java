@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gameObjects.playerClass;
 
+import java.util.Scanner;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +31,8 @@ public class Game implements Screen {
     Vector2 movement = new Vector2();
     Vector2 touch = new Vector2();
     Vector2 dir = new Vector2();
+    Stack stack = new Stack();
+
 
     Vector3 temp = new Vector3();
 
@@ -48,34 +52,47 @@ public class Game implements Screen {
         //player = new playerClass(1, 1);
         gameMap = new TiledGameMap();
         textInputField = new TextInputField();
-        sprite.setSize(32,32);
-        sprite.setX(2*32);
-        sprite.setY(2*32);
-        touch.set(sprite.getX(),sprite.getY());
+        sprite.setSize(32, 32);
+        sprite.setX(2 * 32);
+        sprite.setY(2 * 32);
+        touch.set(sprite.getX(), sprite.getY());
 
 
-        textInputField.textButton.addListener(new ClickListener(){
+        textInputField.textButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent e, float x, float y){
-                textInputField.textButton.setText("Compiling!");
-                String textStr = textInputField.textArea.getText();
-                Matcher matcher = Pattern.compile("\\d+").matcher(textStr);
-                matcher.find();
-                int i = Integer.valueOf(matcher.group());
+            public void clicked(InputEvent e, float x, float y) {
 
-                if(textStr.equals("walk "+ i)) {
-                    touch.set(sprite.getX()+i*32,sprite.getY());
-                    System.out.println(i);
-                }
-                if(textStr.equals("walk -"+ i)) {
-                    touch.set(sprite.getX()+-i*32,sprite.getY());
-                    System.out.println(i);
-                }
-                if(textStr.equals("rotate ")) {
+                stack.push(sprite.getX());
+                while (!stack.isEmpty()) {
+                    for (String line : textInputField.textArea.getText().split("\\n")) {
+                        textInputField.textButton.setText("Compiling!");
+                        String textStr = textInputField.textArea.getText();
+                        Matcher matcher = Pattern.compile("\\d+").matcher(textStr);
+                        matcher.find();
+                        int i = Integer.valueOf(matcher.group());
+                        float startPosX = sprite.getX();
+                        float startPosY = sprite.getY();
+                        float endPosX = sprite.getX() + i * 32;
+                        float endPosY = sprite.getY() + i * 32;
+                        stack.push(startPosX);
 
-                    System.out.println(i);
-                }
+                        if (!(startPosX == endPosX)) {
+                            if (line.equals("walk(" + i + ");")) {
+                                touch.set(sprite.getX() + i * 32, sprite.getY());
+                                System.out.println(i);
 
+                            }
+                            if (line.equals("walk -" + i)) {
+                                touch.set(sprite.getX() + -i * 32, sprite.getY());
+                                System.out.println(i);
+                            }
+
+                            if (startPosX == endPosX) {
+                                stack.pop();
+                            }
+                        }
+                    }
+                }
             }
         });
 
@@ -148,34 +165,25 @@ public class Game implements Screen {
         sprite.setY(position.y);
 
 
-
-        if(Gdx.input.justTouched())
-
-    {
-        Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        {
-            TileType type = gameMap.getTileTypeByLocation(1, pos.x, pos.y);
+        if (Gdx.input.justTouched()) {
+            Vector3 pos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            {
+                TileType type = gameMap.getTileTypeByLocation(1, pos.x, pos.y);
 
 
-            if (type != null) {
-                System.out.println(position.x + "," + position.y);
-                System.out.println("you clicked the tile with id " + type.getId() + " " + type.getName() + " " + type.isCollidable() + " " + type.getDamage());
+                if (type != null) {
+                    System.out.println(position.x + "," + position.y);
+                    System.out.println("you clicked the tile with id " + type.getId() + " " + type.getName() + " " + type.isCollidable() + " " + type.getDamage());
+                }
             }
         }
+
+
     }
-
-
-
-
-
-
-}
 
     @Override
     public void resize(int width, int height) {
     }
-
-
 
 
     @Override

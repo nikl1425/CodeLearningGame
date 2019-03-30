@@ -8,4 +8,5 @@ eclipse.project {
 dependencies {
     implementation files('libs/tween-engine-api-sources.jar')
     implementation files('libs/tween-engine-api.jar')
+    compile "com.strongjoshua:libgdx-inGameConsole:0.9.0"
 }
