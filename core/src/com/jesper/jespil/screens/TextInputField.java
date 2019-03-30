@@ -1,27 +1,26 @@
 package com.jesper.jespil.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class TextArea implements Screen {
+public class TextInputField implements Screen {
 
-    private Game game;
     private TextureAtlas atlas;
     private Skin skin;
     private Stage stage;
-    private TextButton btnInput;
-    private TextField textInput;
+    public TextArea textArea;
+    public TextButton textButton;
+    public int amountofMoves;
 
 
-    public TextArea(){
+    public TextInputField(){
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -29,28 +28,26 @@ public class TextArea implements Screen {
         atlas = new TextureAtlas("ui/atlas.pack"); //Bruges til textbutton
         skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), atlas); //Bruges til textbutton
 
-        final TextButton btnInput = new TextButton("Run!", skin);
+        textButton = new TextButton("Run!", skin);
 
-        btnInput.setPosition(640,0);
-        btnInput.setSize(240,60);
-        btnInput.addListener(new ClickListener(){
+        textButton.setPosition(640,0);
+        textButton.setSize(240,60);
+        textButton.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent e, float x, float y, int point, int button){
-                btnInput.setText("Compiling!");
-                System.out.println(textInput.getText());
+                textButton.setText("Compiling!");
 
             }
         });
 
-        com.badlogic.gdx.scenes.scene2d.ui.TextArea textInput = new com.badlogic.gdx.scenes.scene2d.ui.TextArea("", skin);
-        textInput.setPosition(640,60);
-        textInput.setPrefRows(5);
-        textInput.setSize(240,240);
-        textInput.setText("1.");
+        textArea = new TextArea("", skin);
+        textArea.setPosition(640,60);
+        textArea.setPrefRows(5);
+        textArea.setSize(240,240);
 
 
-        stage.addActor(textInput);
-        stage.addActor(btnInput);
+        stage.addActor(textArea);
+        stage.addActor(textButton);
     }
 
 

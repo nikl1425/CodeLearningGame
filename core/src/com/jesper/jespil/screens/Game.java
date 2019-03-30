@@ -1,7 +1,6 @@
 package com.jesper.jespil.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,29 +9,24 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gameObjects.playerClass;
 
 public class Game implements Screen {
 
     private OrthographicCamera camera;
     GameMap gameMap;
-    TileType tileType;
-    TextArea textArea;
-    int w = 32;
-    SpriteBatch batch;
+    TextInputField textInputField;
     Texture texture;
     Sprite sprite;
-
     Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
     Vector2 movement = new Vector2();
     Vector2 touch = new Vector2();
     Vector2 dir = new Vector2();
-
     Vector3 temp = new Vector3();
-
     float speed = 100;
-
 
     private playerClass player;
     SpriteBatch spriteBatch;
@@ -42,15 +36,42 @@ public class Game implements Screen {
         spriteBatch = new SpriteBatch();
         texture = new Texture(Gdx.files.internal("images/player.png"));
         sprite = new Sprite(texture);
-
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
-        player = new playerClass(1, 1);
+        //player = new playerClass(1, 1);
         gameMap = new TiledGameMap();
-        textArea = new TextArea();
+        textInputField = new TextInputField();
+        sprite.setSize(32,32);
+        sprite.setX(2*32);
+        sprite.setY(2*32);
+        touch.set(sprite.getX(),sprite.getY());
 
+
+
+
+        textInputField.textButton.addListener(new ClickListener(){
+           @Override
+            public void touchUp(InputEvent e, float x, float y, int point, int button){
+               textInputField.textButton.setText("Compiling!");
+               if (textInputField.textArea.getText().equals("walk ")){
+                   touch.set(10*32,10*32);
+               }
+
+            }
+        });
+
+
+       /* textInputField.textArea.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if (textInputField.textArea.getText().equals("gå")){
+                    touch.set(10*32,10*32);
+                }
+            }
+        });*/
+
+/*
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -59,6 +80,8 @@ public class Game implements Screen {
                 return true;
             }
         });
+
+        */
     }
 
 
@@ -72,8 +95,8 @@ public class Game implements Screen {
         sprite.draw(spriteBatch);
         spriteBatch.end();
 
-        player.update(delta);
-        textArea.render(delta);
+        //player.update(delta);
+        textInputField.render(delta);
 
         position.set(sprite.getX(), sprite.getY());
         dir.set(touch).sub(position).nor();
@@ -98,10 +121,16 @@ public class Game implements Screen {
 
 
             if (type != null) {
+                System.out.println(position.x + "," + position.y);
                 System.out.println("you clicked the tile with id " + type.getId() + " " + type.getName() + " " + type.isCollidable() + " " + type.getDamage());
             }
         }
     }
+
+
+
+
+
 
 }
 
