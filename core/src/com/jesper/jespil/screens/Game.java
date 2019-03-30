@@ -13,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gameObjects.playerClass;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Game implements Screen {
 
     private OrthographicCamera camera;
@@ -20,12 +23,15 @@ public class Game implements Screen {
     TextInputField textInputField;
     Texture texture;
     Sprite sprite;
+
     Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
     Vector2 movement = new Vector2();
     Vector2 touch = new Vector2();
     Vector2 dir = new Vector2();
+
     Vector3 temp = new Vector3();
+
     float speed = 100;
 
     private playerClass player;
@@ -48,19 +54,51 @@ public class Game implements Screen {
         touch.set(sprite.getX(),sprite.getY());
 
 
-
-
         textInputField.textButton.addListener(new ClickListener(){
-           @Override
-            public void touchUp(InputEvent e, float x, float y, int point, int button){
-               textInputField.textButton.setText("Compiling!");
-               if (textInputField.textArea.getText().equals("walk ")){
-                   touch.set(10*32,10*32);
-               }
+            @Override
+            public void clicked(InputEvent e, float x, float y){
+                textInputField.textButton.setText("Compiling!");
+                String textStr = textInputField.textArea.getText();
+                Matcher matcher = Pattern.compile("\\d+").matcher(textStr);
+                matcher.find();
+                int i = Integer.valueOf(matcher.group());
+
+                if(textStr.equals("walk "+ i)) {
+                    touch.set(sprite.getX()+i*32,sprite.getY());
+                    System.out.println(i);
+                }
+                if(textStr.equals("walk -"+ i)) {
+                    touch.set(sprite.getX()+-i*32,sprite.getY());
+                    System.out.println(i);
+                }
+                if(textStr.equals("rotate ")) {
+
+                    System.out.println(i);
+                }
 
             }
         });
 
+
+    }
+
+    /*StringBuilder sb = new StringBuilder();
+                String textStr = textInputField.textArea.getText();
+                boolean found = false;
+
+                for (char c : textStr.toCharArray()){
+                    if(Character.isDigit(c)){
+                        sb.append(c);
+                        found=true;
+                        if(textStr.equals("walk "+c)){
+                            touch.set(0,0);
+                            System.out.println(c);
+                        } else if (found){
+                            break;
+                        }
+                    }
+
+                }*/
 
        /* textInputField.textArea.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
@@ -82,7 +120,6 @@ public class Game implements Screen {
         });
 
         */
-    }
 
 
     @Override

@@ -35,16 +35,20 @@ public class TextInputField implements Screen {
         textButton.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent e, float x, float y, int point, int button){
-                textButton.setText("Compiling!");
+                //textButton.setText("Compiling!");
 
             }
+        });
+        textButton.addListener(new ClickListener(){
+          public void clicked(InputEvent event, float x, float y){
+              //textButton.setText("Compiling!");
+          }
         });
 
         textArea = new TextArea("", skin);
         textArea.setPosition(640,60);
         textArea.setPrefRows(5);
         textArea.setSize(240,240);
-        System.out.println("jpæoajfgpj");
 
 
         stage.addActor(textArea);
