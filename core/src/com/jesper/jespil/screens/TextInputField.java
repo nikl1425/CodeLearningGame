@@ -44,6 +44,7 @@ public class TextInputField implements Screen {
         textArea.setPosition(640,60);
         textArea.setPrefRows(5);
         textArea.setSize(240,240);
+        System.out.println("jpæoajfgpj");
 
 
         stage.addActor(textArea);
