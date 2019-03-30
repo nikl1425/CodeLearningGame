@@ -1,18 +1,25 @@
 package com.jesper.jespil.screens;
 
-public class CommandsToExec extends com.strongjoshua.console.CommandExecutor {
+public class CommandsToExec  {
 
         private float startPosX;
         private float startPosY;
         private float destPosX;
         private float destPosY;
+
+        private float degree;
+
+
         private boolean executed = false;
 
-        public CommandsToExec(float startPosX, float startPosY, float destPosX, float destPosY) {
+
+
+    public CommandsToExec(float startPosX, float startPosY, float destPosX, float destPosY, float degree) {
             this.startPosX = startPosX;
             this.startPosY = startPosY;
             this.destPosX = destPosX;
             this.destPosY = destPosY;
+            this.degree = degree;
         }
 
         public float getStartPosX() {
@@ -46,6 +53,14 @@ public class CommandsToExec extends com.strongjoshua.console.CommandExecutor {
         public void setDestPosY(float destPosY) {
             this.destPosY = destPosY;
         }
+
+        public float getDegree() {
+            return degree;
+         }
+
+        public void setDegree(float degree) {
+        this.degree = degree;
+    }
 
         public boolean isExecuted() {
             return executed;

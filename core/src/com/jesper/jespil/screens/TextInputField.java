@@ -3,12 +3,10 @@ package com.jesper.jespil.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class TextInputField implements Screen {
 
@@ -32,18 +30,7 @@ public class TextInputField implements Screen {
 
         textButton.setPosition(640,0);
         textButton.setSize(240,60);
-        textButton.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent e, float x, float y, int point, int button){
-                //textButton.setText("Compiling!");
 
-            }
-        });
-        textButton.addListener(new ClickListener(){
-          public void clicked(InputEvent event, float x, float y){
-              //textButton.setText("Compiling!");
-          }
-        });
 
         textArea = new TextArea("", skin);
         textArea.setPosition(640,60);

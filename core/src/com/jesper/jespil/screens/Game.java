@@ -14,10 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gameObjects.playerClass;
 
 import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Game implements Screen {
 
@@ -54,7 +50,8 @@ public class Game implements Screen {
         //player = new playerClass(1, 1);
         gameMap = new TiledGameMap();
         textInputField = new TextInputField();
-        sprite.setSize(32, 32);
+        sprite.setSize(32,32);
+        sprite.setOriginCenter();
         sprite.setX(2 * 32);
         sprite.setY(2 * 32);
         touch.set(sprite.getX(), sprite.getY());
@@ -70,23 +67,98 @@ public class Game implements Screen {
                 float endPosX = sprite.getX();
                 float endPosY = sprite.getY();
 
+                float degree;
+
                 for (String line : textInputField.textArea.getText().split("\\n")) {
                     System.out.println(line);
 
                     textInputField.textButton.setText("Compiling!");
 //GÅ HØJRE ELLER VENSTRE
                     if (line.startsWith("walk(") && line.endsWith(");")) {
-
                         line = line.replace("walk(", "");
                         line = line.replace(");", "");
-
                         int i = Integer.parseInt(line);
-                        startPosX = endPosX;
-                        startPosY = endPosY;
-                        endPosX = startPosX + i * 32;
-                        endPosY = startPosY + i * 32;
 
-                        stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY));
+                        //RIGHT
+                        if(sprite.getRotation()==-90 && i>=0){
+                            startPosX = endPosX;
+                            startPosY = sprite.getY();
+                            endPosX = startPosX + i * 32;
+                            //endPosY = startPosY + i * 32;
+
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY, -90));
+                        }
+                        //LEFT
+                        if(sprite.getRotation()==90 && i>=0){
+                            startPosX = endPosX;
+                            startPosY = sprite.getY();
+                            endPosX = startPosX + i * 32 *-1;
+                            //endPosY = startPosY + i * 32;
+
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY,90 ));
+                        }
+                        //UP
+                         if(sprite.getRotation()==0 && i>=0){
+                            startPosX = sprite.getX();
+                            startPosY = endPosY;
+                            //endPosX = startPosX + i * 32;
+                            endPosY = startPosY + i * 32;
+
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY, 0));
+                        }
+                        //DOWN
+                        if(sprite.getRotation()==180 && i>=0){
+                            startPosX = sprite.getX();
+                            startPosY = endPosY;
+                            //endPosX = startPosX + i * 32 *-1;
+                            endPosY = startPosY + i * 32 * -1;
+
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY, 180));
+                        }
+
+                    }
+
+                    if(line.startsWith("rotate")) {
+                        if(line.endsWith("left")){
+                            degree = 90;
+                            startPosX = endPosX;
+                            startPosY = endPosY;
+                            //2 FAST ROTATION
+                            sprite.setRotation(degree);
+                            System.out.println(sprite.getRotation());
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY, degree));
+                        }
+
+                        else if(line.endsWith("right")){
+                            degree = -90;
+                            startPosX = endPosX;
+                            startPosY = endPosY;
+                            sprite.setRotation(degree);
+                            System.out.println(sprite.getRotation());
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY, degree));
+
+                        }
+
+                        else if(line.endsWith("up")){
+                            degree = 0;
+                            startPosX = endPosX;
+                            startPosY = endPosY;
+                            sprite.setRotation(degree);
+                            System.out.println(sprite.getRotation());
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY, degree));
+
+                        }
+
+                        else if(line.endsWith("down")){
+                            degree = 180;
+                            startPosX = endPosX;
+                            startPosY = endPosY;
+                            sprite.setRotation(degree);
+                            System.out.println(sprite.getRotation());
+                            stackOfCommands.add(new CommandsToExec(startPosX, startPosY, endPosX, endPosY, degree));
+
+                        }
+
                     }
 
 
@@ -95,45 +167,6 @@ public class Game implements Screen {
         });
 
     }
-
-    /*StringBuilder sb = new StringBuilder();
-                String textStr = textInputField.textArea.getText();
-                boolean found = false;
-
-                for (char c : textStr.toCharArray()){
-                    if(Character.isDigit(c)){
-                        sb.append(c);
-                        found=true;
-                        if(textStr.equals("walk "+c)){
-                            touch.set(0,0);
-                            System.out.println(c);
-                        } else if (found){
-                            break;
-                        }
-                    }
-
-                }*/
-
-       /* textInputField.textArea.setTextFieldListener(new TextField.TextFieldListener() {
-            @Override
-            public void keyTyped(TextField textField, char c) {
-                if (textInputField.textArea.getText().equals("gå")){
-                    touch.set(10*32,10*32);
-                }
-            }
-        });*/
-
-/*
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                camera.unproject(temp.set(screenX, screenY, 0));
-                touch.set(temp.x, temp.y);
-                return true;
-            }
-        });
-
-        */
 
 
     @Override
@@ -151,10 +184,13 @@ public class Game implements Screen {
 
         if (!stackOfCommands.isEmpty()) {
             CommandsToExec cte = stackOfCommands.get(0);
+            //sprite.setRotation(cte.getDegree());
             touch.set(cte.getDestPosX(), cte.getDestPosY());
+
             cte.setExecuted(true);
 
             if (sprite.getX() == cte.getDestPosX() && sprite.getY() == cte.getDestPosY()) {
+
                 stackOfCommands.removeFirst();
             }
         }
