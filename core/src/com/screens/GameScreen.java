@@ -60,6 +60,7 @@ public class GameScreen implements Screen {
                 break;
         }
         //cmdsToExecute.addAction(Actions.delay(1));
+        System.out.println("nyt push");
         return cmdsToExecute;
     }
 
