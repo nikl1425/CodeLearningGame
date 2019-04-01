@@ -1,6 +1,9 @@
-package com.jesper.jespil.screens;
+package com.screens;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,17 +11,17 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.com.jesper.jespil.tween.ActorAccessor;
-import com.com.jesper.jespil.tween.SpriteAccessor;
+import com.com.jesper.jespil.Accessors.SpriteAccessor;
+import com.gameObjects.ImageFileClass;
 
-public class Splash implements Screen {
+public class IntroScreen implements Screen {
     private SpriteBatch batch;
     private Sprite splash;
     private TweenManager tweenManager;
-    imageClass imageClass = new imageClass();
+    ImageFileClass ImageFileClass = new ImageFileClass();
 
 
-    public Splash() {
+    public IntroScreen() {
     }
 
     @Override
@@ -29,8 +32,8 @@ public class Splash implements Screen {
         tweenManager.update(delta);
 
         batch.begin();
-        imageClass.loadTextures();
-        imageClass.backgroundSprite.draw(batch);
+        ImageFileClass.loadTextures();
+        ImageFileClass.backgroundSprite.draw(batch);
         splash.draw(batch);
         batch.end();
     }
@@ -62,7 +65,7 @@ public class Splash implements Screen {
         Tween.to(splash, SpriteAccessor.ALPHA, 2).target(1).repeatYoyo(1,0.5f).setCallback(new TweenCallback() {
             @Override
             public void onEvent(int type, BaseTween<?> source) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
         }).start(tweenManager); //fade in/out (repeatYoyo fader ud)
 
@@ -87,13 +90,13 @@ public class Splash implements Screen {
     @Override
     public void hide() {
 
-        dispose();
+       // dispose();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         splash.getTexture().dispose();
-        imageClass.backgroundSprite.getTexture().dispose();
+        ImageFileClass.backgroundSprite.getTexture().dispose();
     }
 }

@@ -1,4 +1,4 @@
-package com.jesper.jespil.screens;
+package com.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,16 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.com.jesper.jespil.tween.ActorAccessor;
+import com.com.jesper.jespil.Accessors.ActorAccessor;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
+import com.gameObjects.ImageFileClass;
 
 import static com.badlogic.gdx.Gdx.gl20;
 
 
-public class MainMenu implements Screen {
+public class MenuScreen implements Screen {
 
     private Stage stage; //done
     private Skin skin; //The appearance of buttons etc //done
@@ -32,9 +33,9 @@ public class MainMenu implements Screen {
     private Label heading;
     private TweenManager tweenManager;
     public static final String Menu = "MAIN MENU";
-    imageClass imageClass = new imageClass();
+    ImageFileClass ImageFileClass = new ImageFileClass();
     private SpriteBatch batch;
-    Settings settings = new Settings();
+    SettingScreen settingScreen = new SettingScreen();
 
     @Override
     public void render(float delta) { //update
@@ -43,8 +44,8 @@ public class MainMenu implements Screen {
 
 
         batch.begin();
-        imageClass.loadTextures();
-        imageClass.backgroundSprite.draw(batch);
+        ImageFileClass.loadTextures();
+        ImageFileClass.backgroundSprite.draw(batch);
         batch.end();
         tweenManager.update(delta);
 
@@ -67,7 +68,7 @@ public class MainMenu implements Screen {
     public void show() {
         batch = new SpriteBatch();
         stage = new Stage();
-        settings = new Settings();
+        settingScreen = new SettingScreen();
         Gdx.input.setInputProcessor(stage);
 
         atlas = new TextureAtlas("ui/atlas.pack"); //Bruges til textbutton
@@ -90,7 +91,7 @@ public class MainMenu implements Screen {
         buttonPlay.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new levelMenu());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
             }
         });
         buttonPlay.pad(25);
@@ -100,7 +101,7 @@ public class MainMenu implements Screen {
         buttonSettings.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new Settings());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new SettingScreen());
             }
         });
 
@@ -111,8 +112,8 @@ public class MainMenu implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 //Gdx.app.exit();
-                Splash splash = new Splash();
-                ((Game) Gdx.app.getApplicationListener()).setScreen(splash);
+                IntroScreen introScreen = new IntroScreen();
+                ((Game) Gdx.app.getApplicationListener()).setScreen(introScreen);
 
             }
         });

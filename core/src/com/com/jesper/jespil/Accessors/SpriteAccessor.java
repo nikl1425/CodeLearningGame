@@ -1,4 +1,4 @@
-package com.com.jesper.jespil.tween;
+package com.com.jesper.jespil.Accessors;
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 

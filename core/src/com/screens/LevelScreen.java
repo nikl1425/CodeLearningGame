@@ -1,4 +1,4 @@
-package com.jesper.jespil.screens;
+package com.screens;
 
 
 import com.badlogic.gdx.Game;
@@ -16,9 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.gameObjects.ImageFileClass;
 
 
-public class levelMenu implements Screen {
+public class LevelScreen implements Screen {
 
     private Stage stage;
     private Table table;
@@ -27,7 +28,7 @@ public class levelMenu implements Screen {
     private List list;
     private ScrollPane scrollPane;
     private TextButton play, back;
-    imageClass imageClass = new imageClass();
+    ImageFileClass ImageFileClass = new ImageFileClass();
     private SpriteBatch batch;
     String[] List;
 
@@ -55,8 +56,8 @@ public class levelMenu implements Screen {
 
 
         batch.begin();
-        imageClass.loadTextures();
-        imageClass.backgroundSprite.draw(batch);
+        ImageFileClass.loadTextures();
+        ImageFileClass.backgroundSprite.draw(batch);
         batch.end();
 
 
@@ -91,14 +92,14 @@ public class levelMenu implements Screen {
         play.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.jesper.jespil.screens.Game());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.screens.GameScreen());
             }
         });
         play.pad(15);
         play.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.jesper.jespil.screens.Game());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.screens.GameScreen());
             }
         });
 
@@ -108,7 +109,7 @@ public class levelMenu implements Screen {
         back.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
         });
 

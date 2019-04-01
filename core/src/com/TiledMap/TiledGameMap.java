@@ -1,4 +1,4 @@
-package com.jesper.jespil.screens;
+package com.TiledMap;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -11,12 +11,13 @@ public class TiledGameMap extends GameMap {
 
     TiledMap tiledMap;
     OrthogonalTiledMapRenderer tiledMapRenderer;
+    TiledMapTileLayer layer;
 
 
     public TiledGameMap(){
         tiledMap = new TmxMapLoader().load("maps/tiledmap.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-
+        layer = (TiledMapTileLayer) tiledMap.getLayers().get("1");
     }
 
 

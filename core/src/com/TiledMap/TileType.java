@@ -1,4 +1,4 @@
-package com.jesper.jespil.screens;
+package com.TiledMap;
 
 import java.util.HashMap;
 

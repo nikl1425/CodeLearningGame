@@ -9,10 +9,8 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void create () {
-		setScreen(new com.jesper.jespil.screens.Game());
-		System.out.println("hej");
-
-	} //sæt til splash for startskærm
+		setScreen(new com.screens.GameScreen());
+	}
 
 	@Override
 	public void resize (int width, int height) {
@@ -38,7 +36,6 @@ public class MyGdxGame extends Game {
 	@Override
 	public void dispose () {
 		super.dispose();
-
 	}
 
 
