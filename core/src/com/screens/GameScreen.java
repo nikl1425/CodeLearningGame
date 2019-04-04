@@ -53,14 +53,9 @@ public class GameScreen implements Screen {
             //cmdsToExecute.addAction(Actions.delay(1));
             case "repeat":
                 int value2 = Integer.parseInt(cmdSplit[1]);
-
                 playerObject.repeatCommands(value2);
                 PlayerClass.sequenceAction.getActions();
                 cmdsToExecute.addAction(Actions.repeat(value2, PlayerClass.sequenceAction));
-
-
-
-
                 break;
         }
         //cmdsToExecute.addAction(Actions.delay(1));

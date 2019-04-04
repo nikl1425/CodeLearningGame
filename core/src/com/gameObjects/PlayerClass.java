@@ -46,8 +46,13 @@ public class PlayerClass extends Actor {
         for (int i = 0; i < amountofRepeats; i++) {
             if (!cmdListRepeat.isEmpty()){
                 sequenceAction.addAction(GameScreen.parseCommands(cmdListRepeat.get(i), PlayerClass.this));
+                //cmdListRepeat.remove(i);
+                System.out.println(amountofRepeats);
+            }else{
+                sequenceAction.reset();
             }
         }
+
         System.out.println(cmdListRepeat.size());
     }
 
