@@ -44,23 +44,26 @@ public class GameScreen implements Screen {
             case "turn":
                 switch(cmdSplit[1]) {
                     case "left":
-                        cmdsToExecute.addAction(Actions.rotateBy(90,1));
+                        cmdsToExecute.addAction(Actions.rotateBy(90,0.5f));
                         break;
                     case "right":
-                        cmdsToExecute.addAction(Actions.rotateBy(-90,1));
-                        break;
-                }
+                        cmdsToExecute.addAction(Actions.rotateBy(-90,0.5f));
+                        break; }
                 break;
+            //cmdsToExecute.addAction(Actions.delay(1));
             case "repeat":
-                SequenceAction cmdstoRepeat = Actions.sequence();
-                //cmdsToExecute.addAction(Actions.delay(1));
-                cmdstoRepeat.addAction(cmdsToExecute);
                 int value2 = Integer.parseInt(cmdSplit[1]);
-                cmdstoRepeat.addAction(cmdsToExecute);
+
+                playerObject.repeatCommands(value2);
+                PlayerClass.sequenceAction.getActions();
+                cmdsToExecute.addAction(Actions.repeat(value2, PlayerClass.sequenceAction));
+
+
+
+
                 break;
         }
         //cmdsToExecute.addAction(Actions.delay(1));
-        System.out.println("nyt push");
         return cmdsToExecute;
     }
 
