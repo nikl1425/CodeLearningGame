@@ -160,6 +160,7 @@ public class GameScreen implements Screen {
                         int newLvl = level + 1;
                         goalClassList.clear();
                         worldGenerator = new WorldGenerator(newLvl);
+                        System.out.println("New Level!");
 
                     }
                 } /*else {
