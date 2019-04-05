@@ -45,7 +45,7 @@ public class PlayerClass extends Actor {
 
     }
 
-
+/*
     public void repeatCommands(int amountofRepeats){
         for (int i = 0; i < amountofRepeats; i++) {
             if (!cmdListRepeat.isEmpty()){
@@ -59,6 +59,8 @@ public class PlayerClass extends Actor {
 
         System.out.println(cmdListRepeat.size());
     }
+*/
+
 
     public void act(float deltaT) {
         super.act(deltaT);
@@ -72,7 +74,7 @@ public class PlayerClass extends Actor {
     public void setCommands(String[] cmds){
         for (String cmd : cmds){
             cmdList.add(cmd);
-            cmdListRepeat.add(cmd);
+            //cmdListRepeat.add(cmd);
         }
     }
 }

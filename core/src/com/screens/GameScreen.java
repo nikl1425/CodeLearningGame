@@ -20,7 +20,6 @@ import com.gameObjects.goalClass;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GameScreen implements Screen {
 
     GameMap gameMap;
@@ -33,6 +32,58 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Stage stage;
     private PlayerClass playerObject;
+    ArrayList<String> repeatCommands = new ArrayList<>();
+
+
+    public static boolean isInteger(String s) {
+        boolean isValidInteger = false;
+        try
+        {
+            Integer.parseInt(s);
+            // s is a valid integer
+            isValidInteger = true;
+        }
+        catch (NumberFormatException ex)
+        {
+            // s is not an integer
+        }
+        return isValidInteger;
+    }
+
+
+    public ArrayList<String> validateInput(String[] cmds){
+       return validateInput(cmds);
+    }
+
+    public boolean validateCommand(String[] cmd) {
+        for (String cmds : cmd) {
+            String[] cmdSplit = cmds.split(" ");
+            switch (cmdSplit[0]) {
+                case "step":
+                    if (cmdSplit.length == 2 && cmdSplit[1].matches("-?\\d+")) {
+                        return true;
+                    }
+                        return false;
+                case "turn":
+                            if (cmdSplit.length == 2 && cmdSplit[1].matches("left")){
+                                return true;
+                        }
+                            if (cmdSplit.length == 2 && cmdSplit[1].matches("right")){
+                                return true;
+                            }
+                        return false;
+                case "repeat":
+                    if (cmdSplit.length == 2 && cmdSplit[1].matches("-?\\d+")) {
+                        return true;
+                    }
+                    return false;
+            }
+            return false;
+        }
+        return false;
+    }
+
+
     private goalClass goalObject;
 
     private static int w = 32;
@@ -90,9 +141,9 @@ public class GameScreen implements Screen {
             //cmdsToExecute.addAction(Actions.delay(1));
             case "repeat":
                 int value2 = Integer.parseInt(cmdSplit[1]);
-                playerObject.repeatCommands(value2);
-                PlayerClass.sequenceAction.getActions();
-                cmdsToExecute.addAction(Actions.repeat(value2, PlayerClass.sequenceAction));
+                //playerObject.repeatCommands(value2);
+                //PlayerClass.sequenceAction.getActions();
+               // cmdsToExecute.addAction(Actions.repeat(value2, PlayerClass.sequenceAction));
                 break;
         }
         //cmdsToExecute.addAction(Actions.delay(1));
@@ -127,16 +178,26 @@ public class GameScreen implements Screen {
         //gameMap = new TiledGameMap(gameMap);
 
         textInputField = new TextInputField();
+
+
+
         textInputField.textButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent e, float x, float y){
                 String[] cmds = textInputField.textArea.getText().split("\\n");
-                playerObject.setCommands(cmds);
+                if (validateCommand(cmds)){
+                    playerObject.setCommands(cmds);
+                }else {
+
+                }
+               // validateCommand(cmds);
                 textInputField.textArea.setText("");
             }
         });
 
     }
+
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
