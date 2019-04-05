@@ -1,11 +1,11 @@
-package com.jesper.jespil.screens;
+package com.gameObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 
-public class imageClass {
+public class ImageFileClass {
 
     public Texture backgroundTexture;
     public Sprite backgroundSprite;

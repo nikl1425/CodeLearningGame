@@ -1,4 +1,6 @@
-package com.jesper.jespil.screens;
+
+
+package com.TiledMap;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 

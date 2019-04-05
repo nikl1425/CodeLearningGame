@@ -1,4 +1,4 @@
-package com.com.jesper.jespil.tween;
+package com.com.jesper.jespil.Accessors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 

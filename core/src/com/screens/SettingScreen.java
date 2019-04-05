@@ -1,4 +1,4 @@
-package com.jesper.jespil.screens;
+package com.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -11,11 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.gameObjects.ImageFileClass;
 import com.mygdx.game.MyGdxGame;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
-
-public class Settings implements Screen {
+public class SettingScreen implements Screen {
 
     private Stage stage;
     private Table table;
@@ -24,7 +23,7 @@ public class Settings implements Screen {
     private TextButton back;
     private TextField levelDirectoryInput;
     private TextureAtlas atlas;
-    imageClass imageClass = new imageClass();
+    ImageFileClass ImageFileClass = new ImageFileClass();
     private SpriteBatch batch;
 
     public static FileHandle levelDirectory() {
@@ -48,8 +47,8 @@ public class Settings implements Screen {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        imageClass.loadTextures();
-        imageClass.backgroundSprite.draw(batch);
+        ImageFileClass.loadTextures();
+        ImageFileClass.backgroundSprite.draw(batch);
         batch.end();
 
         stage.act(delta);
@@ -86,12 +85,12 @@ public class Settings implements Screen {
                     String actualLevelDirectory = levelDirectoryInput.getText().trim().equals("") ? Gdx.files.getExternalStoragePath() + MyGdxGame.TITLE + "/levels" : levelDirectoryInput.getText().trim(); // shortened form of an if-statement: [boolean] ? [if true] : [else] // String#trim() removes spaces on both sides of the string
                     Gdx.app.getPreferences(MyGdxGame.TITLE).putString("leveldirectory", actualLevelDirectory);
 
-                    // save the settings to preferences file (Preferences#flush() writes the preferences in memory to the file)
+                    // save the settingScreen to preferences file (Preferences#flush() writes the preferences in memory to the file)
                     Gdx.app.getPreferences(MyGdxGame.TITLE).flush();
 
-                    Gdx.app.log(MyGdxGame.TITLE, "settings saved");
+                    Gdx.app.log(MyGdxGame.TITLE, "settingScreen saved");
 
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                 }
             }
         };
