@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.gameObjects.ImageFileClass;
+import com.gameObjects.WorldGenerator;
 
 
 public class LevelScreen implements Screen {
@@ -29,8 +31,10 @@ public class LevelScreen implements Screen {
     private ScrollPane scrollPane;
     private TextButton play, back;
     ImageFileClass ImageFileClass = new ImageFileClass();
+    WorldGenerator worldGenerator;
     private SpriteBatch batch;
     String[] List;
+    public int level;
 
     private void setupTable(){
         //Samler tingene i table
@@ -60,11 +64,8 @@ public class LevelScreen implements Screen {
         ImageFileClass.backgroundSprite.draw(batch);
         batch.end();
 
-
-
         stage.act(delta);
         stage.draw();
-
 
     }
 
@@ -84,22 +85,29 @@ public class LevelScreen implements Screen {
         list = new List<String>(skin);
         list.setItems(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"});
         list.setAlignment(Align.center);
-
+        list.addListener(new InputListener());
 
         scrollPane = new ScrollPane(list, skin);
 
         play = new TextButton("PLAY", skin);
-        play.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y){
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.screens.GameScreen());
-            }
-        });
         play.pad(15);
         play.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.screens.GameScreen());
+                if(list.getSelected() == "1"){
+                    level = 1;
+                    worldGenerator = new WorldGenerator(level);
+                }
+                else if(list.getSelected() == "2"){
+                    level = 2;
+                    worldGenerator = new WorldGenerator(level);
+                }
+                else if(list.getSelected() == "3"){
+                    level = 3;
+                    worldGenerator = new WorldGenerator(level);
+                }
+                //((Game) Gdx.app.getApplicationListener()).setScreen(new com.screens.GameScreen());
+
             }
         });
 
@@ -154,4 +162,5 @@ public class LevelScreen implements Screen {
         atlas.dispose();
         skin.dispose();
     }
+
 }

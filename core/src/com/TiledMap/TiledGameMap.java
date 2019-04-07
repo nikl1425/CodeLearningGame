@@ -9,15 +9,17 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 public class TiledGameMap extends GameMap {
 
+    //TmxMapLoader tiledMap;
     TiledMap tiledMap;
     OrthogonalTiledMapRenderer tiledMapRenderer;
     TiledMapTileLayer layer;
 
 
-    public TiledGameMap(){
-        tiledMap = new TmxMapLoader().load("maps/tiledmap.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-        layer = (TiledMapTileLayer) tiledMap.getLayers().get("1");
+
+    public TiledGameMap(String tiledMap){
+        this.tiledMap = new TmxMapLoader().load(tiledMap);//new TmxMapLoader().load("maps/tiledmap.tmx");
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(this.tiledMap);
+        layer = (TiledMapTileLayer) this.tiledMap.getLayers().get("1");
     }
 
 

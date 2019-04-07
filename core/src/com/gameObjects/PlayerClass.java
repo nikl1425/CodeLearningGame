@@ -3,6 +3,7 @@ package com.gameObjects;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.screens.GameScreen;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class PlayerClass extends Actor {
     public Sprite sprite;
+    public Rectangle playerRect;
     public ArrayList<String> cmdList;
     public List<String> cmdListRepeat;
     public int counter = 0;
@@ -28,6 +30,7 @@ public class PlayerClass extends Actor {
         sprite.setSize(sizeX,sizeY);
         cmdList = new ArrayList<>();
         cmdListRepeat = new LinkedList<>();
+        playerRect = sprite.getBoundingRectangle();
     }
 
     @Override
@@ -39,9 +42,10 @@ public class PlayerClass extends Actor {
         sprite.draw(batch, parentAlpha);
         sprite.rotate(90);
         sprite.setScale(getScaleX(), getScaleY());
+
     }
 
-
+/*
     public void repeatCommands(int amountofRepeats){
         for (int i = 0; i < amountofRepeats; i++) {
             if (!cmdListRepeat.isEmpty()){
@@ -55,6 +59,8 @@ public class PlayerClass extends Actor {
 
         System.out.println(cmdListRepeat.size());
     }
+*/
+
 
     public void act(float deltaT) {
         super.act(deltaT);
@@ -68,7 +74,7 @@ public class PlayerClass extends Actor {
     public void setCommands(String[] cmds){
         for (String cmd : cmds){
             cmdList.add(cmd);
-            cmdListRepeat.add(cmd);
+            //cmdListRepeat.add(cmd);
         }
     }
 }
