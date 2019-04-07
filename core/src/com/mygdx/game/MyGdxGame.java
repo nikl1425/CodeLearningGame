@@ -9,8 +9,9 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void create () {
+		//setScreen(new com.screens.IntroScreen());
 		setScreen(new com.screens.MenuScreen());
-		//setScreen(new com.screens.GameScreen());
+
 	}
 
 	@Override

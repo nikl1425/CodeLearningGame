@@ -1,4 +1,4 @@
-package com.gameObjects;
+/*package com.gameObjects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -43,3 +43,25 @@ public class goalClass extends Actor {
 
     }
 }
+
+*/
+
+
+      /*  for (int i = 0; i < amountGoals; i++) {
+            goalClassList.get(i).goalRect.set(goalClassList.get(i).getX(),goalClassList.get(i).getY(),goalClassList.get(i).sprite.getWidth(),goalClassList.get(i).sprite.getHeight());
+            if (playerObject.rectangle.overlaps(goalClassList.get(i).goalRect)){
+                if(goalClassList.size()>0){
+                    //goalClassList.get(i).remove();
+                    goalClassList.remove(i);
+                    System.out.println(goalClassList.size());
+                    if(goalClassList.size()<=0){
+                        int newLvl = level + 1;
+                        goalClassList.clear();
+                        worldGenerator = new WorldGenerator(newLvl);
+                        System.out.println("New Level!");
+
+                    }
+                }
+
+
+            }*/

@@ -12,7 +12,7 @@ public enum CmdType {
     public final int paramCount;
 
     // private constructor used internally to create the enums and fill them with data
-    private CmdType(String name, int paramCount) {
+    CmdType(String name, int paramCount) {
         this.name = name;
         this.paramCount = paramCount;
     }
@@ -33,4 +33,4 @@ public enum CmdType {
     public String toString() {
         return name + "(" + paramCount + ")";
     }
-};
+}
