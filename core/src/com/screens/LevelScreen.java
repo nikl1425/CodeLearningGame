@@ -135,7 +135,6 @@ public class LevelScreen implements Screen {
         table.setFillParent(true);
         table.setClip(true);
         setupTable();
-
     }
 
     @Override

@@ -122,7 +122,9 @@ public class SettingScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
+        table.setFillParent(true);
+        table.setClip(true);
     }
 
     @Override

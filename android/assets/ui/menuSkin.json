@@ -1,0 +1,105 @@
+{
+    "com.badlogic.gdx.graphics.Color": {
+        "white": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+        },
+        "black": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 1
+        },
+        "red": {
+            "r": 1,
+            "g": 0,
+            "b": 0,
+            "a": 1
+        },
+        "green": {
+            "r": 0,
+            "g": 1,
+            "b": 0,
+            "a": 1
+        },
+        "blue": {
+            "r": 0,
+            "g": 0,
+            "b": 1,
+            "a": 1
+        },
+        "grey": {
+            "r": 211,
+            "g": 211,
+            "b": 211,
+            "a": 1
+        },
+        "gray":  {
+            "r": 0.3,
+            "g": 0.3,
+            "b": 0.3,
+            "a": 1
+        }
+    },
+    "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+        "white": {
+            "file": "fonts/white.fnt"
+        },
+        "black": {
+            "file": "fonts/black.fnt"
+        },
+        "white32": {
+            "file": "fonts/white32.fnt" },
+
+        "black32": {
+            "file": "fonts/black32.fnt" }
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+        "default": {
+            "font": "white",
+            "fontColor": "white"
+        }
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+        "default": {
+            "up": "button.up",
+            "down": "button.down",
+            "font": "black",
+            "pressedOffsetX": 1,
+            "pressedOffsetY": 1
+        }
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
+        "default": {
+            "font": "white",
+            "fontColorSelected": "black",
+            "fontColorUnselected": "white",
+            "selection": "default.selection"
+        }
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
+        "default": {
+            "hScrollKnob": "button.up",
+            "vScrollKnob": "button.up"
+        }
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
+        "default": {
+            "font": "white",
+            "checkboxOn": "checkbox.on",
+            "checkboxOff": "checkbox.off"
+        }
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+    "default": {
+        "font": "black",
+        "fontColor": "black",
+        "messageFontColor": "gray",
+        "background": "default.background",
+        "cursor": "default.selection"
+    }
+}
+
+}

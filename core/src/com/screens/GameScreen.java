@@ -11,14 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.gameObjects.PlayerClass;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.gameObjects.ActorClass;
 import com.gameObjects.TextInputField;
 import com.gameObjects.WorldGenerator;
-import com.gameObjects.goalClass;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+//import com.gameObjects.goalClass;
 
 public class GameScreen implements Screen {
 
@@ -26,92 +28,82 @@ public class GameScreen implements Screen {
     String tiledGameMap;
     TextInputField textInputField;
     WorldGenerator worldGenerator;
-
-
-    private List<goalClass> goalClassList = new ArrayList<goalClass>();
     private OrthographicCamera camera;
     private Stage stage;
-    private PlayerClass playerObject;
-    ArrayList<String> repeatCommands = new ArrayList<>();
+    private ActorClass playerActor;
+    private List<ActorClass> goalActorList = new ArrayList<>();
+    private static int w = 32;
+    int playerX;
+    int playerY;
+    int level;
+    int amountGoals;
+    int x,y;
+    int tileSize = 32;
 
 
-    public static boolean isInteger(String s) {
-        boolean isValidInteger = false;
-        try
-        {
-            Integer.parseInt(s);
-            // s is a valid integer
-            isValidInteger = true;
+    public ArrayList<String[]> validateInput(String input) {
+        ArrayList<String[]> cmds = new ArrayList<>();
+        String[] cmdArray = input.split("\\n");
+        String[] cmd0, cmd1;
+        int repeatEndIndex = 0;
+        for (int index = 0; index < cmdArray.length; index++) {
+            cmd0 = cmdArray[index].split(" ");
+            if (validateCommand(cmd0)) {
+                if (cmd0[0].equals("repeat")) {
+                    System.out.println("REPEAT");
+                    boolean cmdIsValid = true;
+                    for (int subIndex = index + 1; subIndex < cmdArray.length; subIndex++) {
+                        cmd1 = cmdArray[subIndex].split(" ");
+                        cmdIsValid &= validateCommand(cmd1);
+                        if (cmdIsValid) {
+                            if (cmd1[0].equals("break")) {
+                                System.out.println("BREAK");
+                                repeatEndIndex = subIndex;
+                                break;
+                            }
+                        } else {
+                            cmds.clear();
+                            return cmds;
+                        }
+                    }
+                    int amountOfRepeats = Integer.parseInt(cmd0[1]);
+                    for (int i = 0; i < amountOfRepeats; i++) {
+                        for (int subIndex = index + 1; subIndex < repeatEndIndex; subIndex++) {
+                            cmds.add(cmdArray[subIndex].split(" "));
+                        }
+                    }
+                    index += repeatEndIndex;
+                }
+                else cmds.add(cmd0);
+            } else {
+                cmds.clear();
+                return cmds;
+            }
         }
-        catch (NumberFormatException ex)
-        {
-            // s is not an integer
-        }
-        return isValidInteger;
-    }
-
-
-    public ArrayList<String> validateInput(String[] cmds){
-       return validateInput(cmds);
+        return cmds;
     }
 
     public boolean validateCommand(String[] cmd) {
-        for (String cmds : cmd) {
-            String[] cmdSplit = cmds.split(" ");
-            switch (cmdSplit[0]) {
-                case "step":
-                    if (cmdSplit.length == 2 && cmdSplit[1].matches("-?\\d+")) {
-                        return true;
-                    }
-                        return false;
-                case "turn":
-                            if (cmdSplit.length == 2 && cmdSplit[1].matches("left")){
-                                return true;
-                        }
-                            if (cmdSplit.length == 2 && cmdSplit[1].matches("right")){
-                                return true;
-                            }
-                        return false;
-                case "repeat":
-                    if (cmdSplit.length == 2 && cmdSplit[1].matches("-?\\d+")) {
-                        return true;
-                    }
-                    return false;
-            }
-            return false;
+        if (cmd == null || cmd.length == 0) return false;
+        switch (cmd[0]) {
+            case "step":
+                return cmd.length == 2 && cmd[1].matches("\\d");
+            case "turn":
+                if (cmd.length != 2) return false;
+                return cmd[1].equals("left") || cmd[1].equals("right");
+            case "repeat":
+                return cmd.length == 2 && cmd[1].matches("\\d");
+            case "break":
+                return true;
         }
         return false;
     }
 
 
-    private goalClass goalObject;
 
-    private static int w = 32;
-
-    int playerX;
-    int playerY;
-    //int goalX;
-    //int goalY;
-    int level;
-    int amountGoals;
-
-
-
-    public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap){
-        this.playerX = playerX*w;
-        this.playerY = playerY*w;
-        //this.goalX = goalX*w;
-        //this.goalY = goalY*w;
-        this.tiledGameMap = tiledGameMap;
-        this.level = level;
-        this.amountGoals = amountGoals;
-
-    }
-
-
-    public static SequenceAction parseCommands(String input, PlayerClass playerObject) {
+    public static SequenceAction parseCommands(String[] input, ActorClass playerObject) {
         SequenceAction cmdsToExecute = Actions.sequence();
-        String[] cmdSplit = input.split(" ");
+        String[] cmdSplit = input;
         switch (cmdSplit[0]) {
             case "step":
                 float currentRotation = playerObject.getRotation();
@@ -139,61 +131,55 @@ public class GameScreen implements Screen {
                         break; }
                 break;
             //cmdsToExecute.addAction(Actions.delay(1));
-            case "repeat":
-                int value2 = Integer.parseInt(cmdSplit[1]);
-                //playerObject.repeatCommands(value2);
-                //PlayerClass.sequenceAction.getActions();
-               // cmdsToExecute.addAction(Actions.repeat(value2, PlayerClass.sequenceAction));
-                break;
         }
-        //cmdsToExecute.addAction(Actions.delay(1));
         return cmdsToExecute;
     }
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
-
-        playerObject = new PlayerClass("images/player.png",w,w);
-        playerObject.sprite.setOrigin(playerObject.getWidth()/2, playerObject.getHeight()/2);
-        playerObject.setX(playerX);
-        playerObject.setY(playerY);
-        stage.addActor(playerObject);
-
-        for (int i = 0; i < amountGoals; i++) {
-            //goalObject = new goalClass("images/diamond.png",w,w);
-            goalClassList.add(new goalClass("images/diamond.png", w,w));
-            goalClassList.get(i).sprite.setOrigin(goalClassList.get(i).getWidth()/2,goalClassList.get(i).getHeight()/2);
-            //goalObject.setX(goalY);
-            //goalObject.setY(goalY);
-            stage.addActor(goalClassList.get(i));
-        }
-
-
+        stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        Gdx.graphics.getDisplayMode();
+        Gdx.input.setInputProcessor(stage);
+        playerActor = new ActorClass("images/player.png",w,w);
+        playerActor.sprite.setOrigin(playerActor.getWidth()/2, playerActor.getHeight()/2);
+        playerActor.setX(playerX);
+        playerActor.setY(playerY);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
-
         gameMap = new TiledGameMap(tiledGameMap);
-        //gameMap = new TiledGameMap(gameMap);
-
-        textInputField = new TextInputField();
-
+        textInputField = new TextInputField(640,0, 240,60,240,640);
+        stage.addActor(playerActor);
+        stage.addActor(textInputField.textArea);
+        stage.addActor(textInputField.textButton);
 
 
         textInputField.textButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent e, float x, float y){
-                String[] cmds = textInputField.textArea.getText().split("\\n");
-                if (validateCommand(cmds)){
-                    playerObject.setCommands(cmds);
-                }else {
-
-                }
-               // validateCommand(cmds);
+                playerActor.setCommands(validateInput(textInputField.textArea.getText()));
                 textInputField.textArea.setText("");
             }
         });
+
+
+
+
+        for (int i = 0; i < amountGoals; i++) {
+            goalActorList.add(new ActorClass("images/diamond.png", w, w));
+            stage.addActor(goalActorList.get(i));
+        }
+
+        for (ActorClass actorClass : goalActorList) {
+            Random r = new Random();
+            x = (r.nextInt(5) * tileSize);
+            y = (r.nextInt(5) * tileSize);
+            actorClass.setBounds(x, y, actorClass.getWidth(), actorClass.getHeight());
+            actorClass.sprite.setPosition(x, y);
+        }
+
+
+
 
     }
 
@@ -205,46 +191,55 @@ public class GameScreen implements Screen {
         gameMap.render(camera);
         stage.act(delta);
         stage.draw();
-        textInputField.render(delta);
-
-        playerObject.playerRect.set(playerObject.getX(),playerObject.getY(),playerObject.sprite.getWidth(),playerObject.getHeight());
-
-        for (int i = 0; i < amountGoals; i++) {
-            goalClassList.get(i).goalRect.set(goalClassList.get(i).getX(),goalClassList.get(i).getY(),goalClassList.get(i).sprite.getWidth(),goalClassList.get(i).sprite.getHeight());
-
-            if (playerObject.playerRect.overlaps(goalClassList.get(i).goalRect)){
-                if(goalClassList.size()>0){
-                    //goalClassList.get(i).remove();
-                    goalClassList.remove(i);
-                    System.out.println(goalClassList.size());
-                    if(goalClassList.size()<=0){
-                        int newLvl = level + 1;
-                        goalClassList.clear();
-                        worldGenerator = new WorldGenerator(newLvl);
-                        System.out.println("New Level!");
-
-                    }
-                } /*else {
-                    try {
-                        int newLvl = level + 1;
-                        worldGenerator = new WorldGenerator(newLvl);
-                    } catch (NullPointerException e) {
-                        System.err.print("dang");
-                    }
-                }*/
-
-            }
 
 
+        playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth()/2, playerActor.getHeight()/2);
+        //System.out.println(amountGoals);
+
+        if (playerActor.getActions().size > 0){
+            textInputField.textButton.setText("Compiling!");
+        }else{
+            textInputField.textButton.setText("Run!");
         }
 
 
 
+        for (int i = 0; i < amountGoals; i++) {
+            goalActorList.get(i).sprite.setOrigin(goalActorList.get(i).getWidth()/2, goalActorList.get(i).getHeight()/2);
+            float goalX = goalActorList.get(i).getX();
+            float goalY = goalActorList.get(i).getY();
+            float goalWidth = goalActorList.get(i).sprite.getWidth();
+            float goalHeight = goalActorList.get(i).sprite.getHeight();
+            goalActorList.get(i).rectangle.set(goalX, goalY, goalWidth, goalHeight);
+            System.out.println(amountGoals);
+            if (goalActorList.get(i).rectangle.overlaps(playerActor.rectangle)) {
+                if (goalActorList.size() > 0) {
+                    goalActorList.remove(i);
+                    //goalActorList.clear();
+                    System.out.println("Couldn't access");
+                    System.out.println(goalActorList.size());
+
+                    if (goalActorList.size() <= 0) {
+                        int newLvl = level + 1;
+                        goalActorList.clear();
+                        worldGenerator = new WorldGenerator(newLvl);
+                    }
+                }
+            }
+        }
     }
 
+    public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap){
+        this.playerX = playerX*w;
+        this.playerY = playerY*w;
+        this.tiledGameMap = tiledGameMap;
+        this.level = level;
+        this.amountGoals = amountGoals;
+    }
 
     @Override
     public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
     @Override
     public void pause() {

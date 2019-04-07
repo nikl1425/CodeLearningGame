@@ -19,6 +19,7 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import com.gameObjects.ImageFileClass;
+import com.mygdx.game.MyGdxGame;
 
 import static com.badlogic.gdx.Gdx.gl20;
 
@@ -61,7 +62,6 @@ public class MenuScreen implements Screen {
         stage.getViewport().update(width, height, true);
         table.setFillParent(true);
         table.setClip(true);
-
     }
 
     @Override
@@ -168,7 +168,9 @@ public class MenuScreen implements Screen {
 
     @Override
     public void pause() {
-
+        Gdx.app.getPreferences(MyGdxGame.TITLE).putBoolean("fullscreen", true);
+        Gdx.app.getPreferences(MyGdxGame.TITLE).getBoolean("fullscreen");
+        Gdx.app.getPreferences(MyGdxGame.TITLE).flush();
     }
 
     @Override
