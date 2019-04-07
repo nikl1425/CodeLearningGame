@@ -17,6 +17,7 @@ import com.gameObjects.TextInputField;
 import com.gameObjects.WorldGenerator;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -31,7 +32,7 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Stage stage;
     private ActorClass playerActor;
-    private List<ActorClass> goalActorList = new ArrayList<>();
+    private List<ActorClass> goalActorList = new LinkedList<>();
     private static int w = 32;
     int playerX;
     int playerY;
@@ -206,22 +207,21 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < amountGoals; i++) {
             goalActorList.get(i).sprite.setOrigin(goalActorList.get(i).getWidth()/2, goalActorList.get(i).getHeight()/2);
+            System.out.println(goalActorList.size());
             float goalX = goalActorList.get(i).getX();
             float goalY = goalActorList.get(i).getY();
             float goalWidth = goalActorList.get(i).sprite.getWidth();
             float goalHeight = goalActorList.get(i).sprite.getHeight();
             goalActorList.get(i).rectangle.set(goalX, goalY, goalWidth, goalHeight);
-            System.out.println(amountGoals);
-            if (goalActorList.get(i).rectangle.overlaps(playerActor.rectangle)) {
-                if (goalActorList.size() > 0) {
-                    goalActorList.remove(i);
+            if (this.goalActorList.get(i).rectangle.overlaps(this.playerActor.rectangle)) {
+                if (!goalActorList.isEmpty() && goalActorList.size() <= amountGoals) {
+                    goalActorList.remove(goalActorList.get(i));
                     //goalActorList.clear();
                     System.out.println("Couldn't access");
-                    System.out.println(goalActorList.size());
 
-                    if (goalActorList.size() <= 0) {
-                        int newLvl = level + 1;
+                    if (!goalActorList.get(i).hasParent()) {
                         goalActorList.clear();
+                        int newLvl = level + 1;
                         worldGenerator = new WorldGenerator(newLvl);
                     }
                 }

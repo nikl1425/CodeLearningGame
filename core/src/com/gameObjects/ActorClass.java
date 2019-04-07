@@ -24,9 +24,9 @@ public class ActorClass extends Actor {
         setOrigin(getWidth()/2,getHeight()/2);
         sprite = new Sprite(new Texture(imagePath));
         sprite.setSize(sizeX,sizeY);
-        cmdList = new ArrayList<String[]>();
+        cmdList = new ArrayList<>();
         cmdListRepeat = new LinkedList<>();
-        rectangle = sprite.getBoundingRectangle();
+        rectangle = this.sprite.getBoundingRectangle();
     }
 
     @Override
