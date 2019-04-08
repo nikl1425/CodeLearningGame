@@ -16,10 +16,7 @@ import com.gameObjects.ActorClass;
 import com.gameObjects.TextInputField;
 import com.gameObjects.WorldGenerator;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 //import com.gameObjects.goalClass;
 
@@ -32,13 +29,13 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Stage stage;
     private ActorClass playerActor;
-    private List<ActorClass> goalActorList = new LinkedList<>();
+    private List<ActorClass> goalActorList = new ArrayList<>();
     private static int w = 32;
     int playerX;
     int playerY;
     int level;
     int amountGoals;
-    int x,y;
+    int x, y;
     int tileSize = 32;
 
 
@@ -74,8 +71,7 @@ public class GameScreen implements Screen {
                         }
                     }
                     index += repeatEndIndex;
-                }
-                else cmds.add(cmd0);
+                } else cmds.add(cmd0);
             } else {
                 cmds.clear();
                 return cmds;
@@ -101,7 +97,6 @@ public class GameScreen implements Screen {
     }
 
 
-
     public static SequenceAction parseCommands(String[] input, ActorClass playerObject) {
         SequenceAction cmdsToExecute = Actions.sequence();
         String[] cmdSplit = input;
@@ -111,7 +106,7 @@ public class GameScreen implements Screen {
                 int cycles = (int) (currentRotation / 360);
                 currentRotation = currentRotation - Math.signum(currentRotation) * 360 * cycles;
                 currentRotation = (currentRotation + 360) % 360;
-                currentRotation  = Math.round(currentRotation);
+                currentRotation = Math.round(currentRotation);
                 int value = Integer.parseInt(cmdSplit[1]);
                 if (currentRotation == 0)
                     cmdsToExecute.addAction(Actions.moveBy(value * w, 0, (float) value / 5));
@@ -123,13 +118,14 @@ public class GameScreen implements Screen {
                     cmdsToExecute.addAction(Actions.moveBy(0, -value * w, (float) value / 5));
                 break;
             case "turn":
-                switch(cmdSplit[1]) {
+                switch (cmdSplit[1]) {
                     case "left":
-                        cmdsToExecute.addAction(Actions.rotateBy(90,0.5f));
+                        cmdsToExecute.addAction(Actions.rotateBy(90, 0.5f));
                         break;
                     case "right":
-                        cmdsToExecute.addAction(Actions.rotateBy(-90,0.5f));
-                        break; }
+                        cmdsToExecute.addAction(Actions.rotateBy(-90, 0.5f));
+                        break;
+                }
                 break;
             //cmdsToExecute.addAction(Actions.delay(1));
         }
@@ -141,29 +137,27 @@ public class GameScreen implements Screen {
         stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.graphics.getDisplayMode();
         Gdx.input.setInputProcessor(stage);
-        playerActor = new ActorClass("images/player.png",w,w);
-        playerActor.sprite.setOrigin(playerActor.getWidth()/2, playerActor.getHeight()/2);
+        playerActor = new ActorClass("images/player.png", w, w);
+        playerActor.sprite.setOrigin(playerActor.getWidth() / 2, playerActor.getHeight() / 2);
         playerActor.setX(playerX);
         playerActor.setY(playerY);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
         gameMap = new TiledGameMap(tiledGameMap);
-        textInputField = new TextInputField(640,0, 240,60,240,640);
+        textInputField = new TextInputField(640, 0, 240, 60, 240, 640);
         stage.addActor(playerActor);
         stage.addActor(textInputField.textArea);
         stage.addActor(textInputField.textButton);
 
 
-        textInputField.textButton.addListener(new ClickListener(){
+        textInputField.textButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent e, float x, float y){
+            public void clicked(InputEvent e, float x, float y) {
                 playerActor.setCommands(validateInput(textInputField.textArea.getText()));
                 textInputField.textArea.setText("");
             }
         });
-
-
 
 
         for (int i = 0; i < amountGoals; i++) {
@@ -180,8 +174,6 @@ public class GameScreen implements Screen {
         }
 
 
-
-
     }
 
 
@@ -193,45 +185,47 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
+        playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth() / 2, playerActor.getHeight() / 2);
 
-        playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth()/2, playerActor.getHeight()/2);
-        //System.out.println(amountGoals);
-
-        if (playerActor.getActions().size > 0){
+        if (playerActor.getActions().size > 0) {
             textInputField.textButton.setText("Compiling!");
-        }else{
+        } else {
             textInputField.textButton.setText("Run!");
         }
 
 
-
         for (int i = 0; i < amountGoals; i++) {
-            goalActorList.get(i).sprite.setOrigin(goalActorList.get(i).getWidth()/2, goalActorList.get(i).getHeight()/2);
-            System.out.println(goalActorList.size());
-            float goalX = goalActorList.get(i).getX();
-            float goalY = goalActorList.get(i).getY();
-            float goalWidth = goalActorList.get(i).sprite.getWidth();
-            float goalHeight = goalActorList.get(i).sprite.getHeight();
-            goalActorList.get(i).rectangle.set(goalX, goalY, goalWidth, goalHeight);
-            if (this.goalActorList.get(i).rectangle.overlaps(this.playerActor.rectangle)) {
-                if (!goalActorList.isEmpty() && goalActorList.size() <= amountGoals) {
-                    goalActorList.remove(goalActorList.get(i));
-                    //goalActorList.clear();
-                    System.out.println("Couldn't access");
+            goalActorList.get(i).sprite.setOrigin(goalActorList.get(i).getWidth() / 2, goalActorList.get(i).getHeight() / 2);
+            System.out.println(amountGoals);
 
-                    if (!goalActorList.get(i).hasParent()) {
-                        goalActorList.clear();
-                        int newLvl = level + 1;
-                        worldGenerator = new WorldGenerator(newLvl);
-                    }
+        }
+        for (Iterator<ActorClass> iterator = goalActorList.iterator(); iterator.hasNext(); ) {
+            ActorClass actorGoal = iterator.next();
+            float goalX = actorGoal.getX();
+            float goalY = actorGoal.getY();
+            float goalWidth = actorGoal.sprite.getWidth();
+            float goalHeight = actorGoal.sprite.getHeight();
+            actorGoal.rectangle.set(goalX, goalY, goalWidth, goalHeight);
+            if (actorGoal.rectangle.overlaps(playerActor.rectangle)) {
+                actorGoal.remove();
+                iterator.remove();
+                amountGoals = amountGoals - 1;
+
+
+                if (amountGoals < 1) {
+                    int newLvl = level + 1;
+                    goalActorList.clear();
+
+                    worldGenerator = new WorldGenerator(newLvl);
                 }
             }
         }
+
     }
 
-    public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap){
-        this.playerX = playerX*w;
-        this.playerY = playerY*w;
+    public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap) {
+        this.playerX = playerX * w;
+        this.playerY = playerY * w;
         this.tiledGameMap = tiledGameMap;
         this.level = level;
         this.amountGoals = amountGoals;
@@ -241,16 +235,20 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
+
     @Override
     public void pause() {
     }
+
     @Override
     public void resume() {
     }
+
     @Override
     public void hide() {
         dispose();
     }
+
     @Override
     public void dispose() {
         stage.dispose();
