@@ -2,10 +2,12 @@ package com.screens;
 
 import com.TiledMap.GameMap;
 import com.TiledMap.TiledGameMap;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -37,6 +39,9 @@ public class GameScreen implements Screen {
     int amountGoals;
     int x, y;
     int tileSize = 32;
+    boolean lvlBegun;
+    int commandCounter;
+    int amountofPoints;
 
 
     public ArrayList<String[]> validateInput(String input) {
@@ -81,6 +86,7 @@ public class GameScreen implements Screen {
     }
 
     public boolean validateCommand(String[] cmd) {
+        commandCounter++;
         if (cmd == null || cmd.length == 0) return false;
         switch (cmd[0]) {
             case "step":
@@ -156,6 +162,8 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent e, float x, float y) {
                 playerActor.setCommands(validateInput(textInputField.textArea.getText()));
                 textInputField.textArea.setText("");
+
+                //System.out.println(lvlBegun);
             }
         });
 
@@ -184,19 +192,26 @@ public class GameScreen implements Screen {
         gameMap.render(camera);
         stage.act(delta);
         stage.draw();
+       // System.out.println(commandCounter);
 
         playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth() / 2, playerActor.getHeight() / 2);
 
         if (playerActor.getActions().size > 0) {
             textInputField.textButton.setText("Compiling!");
+            lvlBegun = true;
         } else {
             textInputField.textButton.setText("Run!");
+        }
+
+        if (lvlBegun == true && playerActor.getActions().size <= 0 && amountGoals >= 1){
+             worldGenerator = new WorldGenerator(level);
+            //System.out.println("RESTART GAME HERE!");
         }
 
 
         for (int i = 0; i < amountGoals; i++) {
             goalActorList.get(i).sprite.setOrigin(goalActorList.get(i).getWidth() / 2, goalActorList.get(i).getHeight() / 2);
-            System.out.println(amountGoals);
+            //System.out.println(amountGoals);
 
         }
         for (Iterator<ActorClass> iterator = goalActorList.iterator(); iterator.hasNext(); ) {
@@ -212,15 +227,27 @@ public class GameScreen implements Screen {
                 amountGoals = amountGoals - 1;
 
 
-                if (amountGoals < 1) {
+                if (amountGoals == 0) {
                     int newLvl = level + 1;
                     goalActorList.clear();
-
                     worldGenerator = new WorldGenerator(newLvl);
                 }
             }
         }
 
+        switch (commandCounter){
+            case 2:
+                amountofPoints = 3;
+                break;
+            case 3:
+                amountofPoints = 2;
+                break;
+            case 4:
+                amountofPoints = 1;
+                break;
+        }
+
+        System.out.println(amountofPoints);
     }
 
     public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap) {

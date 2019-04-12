@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
 		config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
-		config.useGL30 = true;
+		//config.useGL30 = true;
 		config.width = 880;
 		config.height = 640;
 		config.vSyncEnabled = true; // Setting to false disables vertical sync
