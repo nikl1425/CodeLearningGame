@@ -2,6 +2,7 @@ package com.screens;
 
 import com.TiledMap.GameMap;
 import com.TiledMap.TiledGameMap;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -243,19 +244,29 @@ public class GameScreen implements Screen {
                 amountGoals = amountGoals - 1;
 
 
+                Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+                Dialog dialog = new Dialog("Warning", uiSkin , "Dialog"){
+                    public void result(Object obj){
+                        System.out.println("result " + obj);
+                        if (obj.toString().equals("true")){
+                            int newLvl = level + 1;
+                            goalActorList.clear();
+                            worldGenerator = new WorldGenerator(newLvl);
+                        }else if (obj.toString().equals("false")){
+                            ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        }
+                    }
+                };
+
                 if (amountGoals == 0) {
                     dialog.text("You have won - Maximum points awarded! Do you want to continue?");
                     dialog.button("Yes", true);
                     dialog.button("No", false);
                     dialog.show(stage);
-
-                    if (dialog.equals(true)){
-                        int newLvl = level + 1;
-                        goalActorList.clear();
-                        worldGenerator = new WorldGenerator(newLvl);
-                    }
-
                 }
+
+
+
             }
         }
 
@@ -282,12 +293,7 @@ public class GameScreen implements Screen {
         this.amountGoals = amountGoals;
     }
 
-    Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-    Dialog dialog = new Dialog("Warning", uiSkin , "Dialog"){
-        public void result(Object obj){
-            System.out.println("result " + obj);
-        }
-    };
+
 
 
 
