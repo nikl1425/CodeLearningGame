@@ -4,6 +4,7 @@ import com.TiledMap.GameMap;
 import com.TiledMap.TiledGameMap;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,6 +35,7 @@ public class GameScreen implements Screen {
     GameMap gameMap;
     String tiledGameMap;
     TextInputField textInputField;
+    TextInputField textInputField1;
     WorldGenerator worldGenerator;
     private OrthographicCamera camera;
     private SpriteBatch spriteBatch;
@@ -50,6 +52,11 @@ public class GameScreen implements Screen {
     boolean lvlBegun;
     int commandCounter;
     int amountofPoints;
+    private boolean measure;
+    private int mouseX;
+    private int mouseY;
+    private int clickCounter;
+    private Dialog dialog;
 
 
     public ArrayList<String[]> validateInput(String input) {
@@ -165,10 +172,13 @@ public class GameScreen implements Screen {
 
         gameMap = new TiledGameMap(tiledGameMap);
         textInputField = new TextInputField(640, 0, 240, 60, 240, 640);
+        textInputField1 = new TextInputField(640,60,240,60,240,120);
         stage.addActor(gameMap);
         stage.addActor(playerActor);
         stage.addActor(textInputField.textArea);
         stage.addActor(textInputField.textButton);
+        //stage.addActor(textInputField1.textArea);
+        stage.addActor(textInputField1.textButton);
         stage.getRoot().getColor().a = 0;
         stage.getRoot().addAction(fadeIn(1f));
 
@@ -181,6 +191,16 @@ public class GameScreen implements Screen {
                 //System.out.println(lvlBegun);
             }
         });
+        textInputField1.textButton.setText("Measure!");
+
+        textInputField1.textButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent e, float x, float y) {
+                measure = true;
+            }
+        });
+
+
 
 
         for (int i = 0; i < amountGoals; i++) {
@@ -209,6 +229,28 @@ public class GameScreen implements Screen {
         camera.update();
         stage.act(delta);
         stage.draw();
+
+
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && measure){
+            mouseY = Gdx.input.getY()/32;
+            mouseX = Gdx.input.getX()/32;
+            mouseY = Gdx.graphics.getHeight()/32-1 - mouseY;
+            int playerX = (int)playerActor.getX()/32;
+            int playerY = (int)playerActor.getY()/32;
+            Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+            dialog = new Dialog("Measure", uiSkin , "Dialog"){
+                public void result(Object obj){
+                }
+            };
+            dialog.text("Your position: " + playerX + "," + playerY);
+            dialog.add().row();
+            dialog.text("Target position: " + mouseX + "," + mouseY);
+            dialog.button("Ok!", true);
+            dialog.show(stage);
+            measure = false;
+        }
+
+
 
 
         playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth() / 2, playerActor.getHeight() / 2);
@@ -245,7 +287,7 @@ public class GameScreen implements Screen {
 
 
                 Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-                Dialog dialog = new Dialog("Warning", uiSkin , "Dialog"){
+                dialog = new Dialog("Warning", uiSkin , "Dialog"){
                     public void result(Object obj){
                         System.out.println("result " + obj);
                         if (obj.toString().equals("true")){
@@ -282,7 +324,7 @@ public class GameScreen implements Screen {
                 break;
         }
 
-        System.out.println(amountofPoints);
+        //System.out.println(amountofPoints);
     }
 
     public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap) {
