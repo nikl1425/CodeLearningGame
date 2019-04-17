@@ -5,7 +5,7 @@ import com.badlogic.gdx.Game;
 
 public class MyGdxGame extends Game {
 
-	public static final String TITLE = "Cast-Down", VERSION = "0.0.0.0.0.reallyEarly";
+	public static final String TITLE = "CodeInGame", VERSION = "1.2";
 
 	@Override
 	public void create () {

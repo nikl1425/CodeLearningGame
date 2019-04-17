@@ -1,5 +1,4 @@
 package com.screens;
-
 import com.TiledMap.GameMap;
 import com.TiledMap.TiledGameMap;
 import com.badlogic.gdx.Game;
@@ -14,48 +13,39 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gameObjects.ActorClass;
 import com.gameObjects.TextInputField;
 import com.gameObjects.WorldGenerator;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 
 //import com.gameObjects.goalClass;
 
 public class GameScreen implements Screen {
-    GameMap gameMap;
-    String tiledGameMap;
-    TextInputField textInputField;
-    TextInputField textInputField1;
-    WorldGenerator worldGenerator;
+    private GameMap gameMap;
+    private String tiledGameMap;
+    private TextInputField textInputField;
+    private TextInputField textInputField1;
+    private WorldGenerator worldGenerator;
     private OrthographicCamera camera;
     private SpriteBatch spriteBatch;
     private Stage stage;
     private ActorClass playerActor;
     private List<ActorClass> goalActorList = new ArrayList<>();
     private static int w = 32;
-    int playerX;
-    int playerY;
-    int level;
-    int amountGoals;
-    int x, y;
-    int tileSize = 32;
-    boolean lvlBegun;
-    int commandCounter;
-    int amountofPoints;
+    private int playerX;
+    private int playerY;
+    private int level;
+    private int amountGoals;
+    private boolean lvlBegun;
+    private int commandCounter;
     private boolean measure;
-    private int mouseX;
-    private int mouseY;
-    private int clickCounter;
     private Dialog dialog;
 
 
@@ -104,6 +94,8 @@ public class GameScreen implements Screen {
         commandCounter++;
         if (cmd == null || cmd.length == 0) return false;
         switch (cmd[0]) {
+            case "-step":
+                return cmd.length == 2 && cmd[1].matches("\\d");
             case "step":
                 return cmd.length == 2 && cmd[1].matches("\\d");
             case "turn":
@@ -122,6 +114,22 @@ public class GameScreen implements Screen {
         SequenceAction cmdsToExecute = Actions.sequence();
         String[] cmdSplit = input;
         switch (cmdSplit[0]) {
+            case "-step":
+                float currentRotation1 = playerObject.getRotation();
+                int cycles1 = (int) (currentRotation1 / 360);
+                currentRotation1 = currentRotation1 - Math.signum(currentRotation1) * 360 * cycles1;
+                currentRotation1 = (currentRotation1 + 360) % 360;
+                currentRotation1 = Math.round(currentRotation1);
+                int value1 = Integer.parseInt(cmdSplit[1]);
+                if (currentRotation1 == 0)
+                    cmdsToExecute.addAction(Actions.moveBy(-value1 * w, 0, (float) value1 / 5));
+                if (currentRotation1 == 90)
+                    cmdsToExecute.addAction(Actions.moveBy(0, -value1 * w, (float) value1 / 5));
+                if (currentRotation1 == 180)
+                    cmdsToExecute.addAction(Actions.moveBy(value1 * w, 0, (float) value1 / 5));
+                if (currentRotation1 == 270)
+                    cmdsToExecute.addAction(Actions.moveBy(0, value1 * w, (float) value1 / 5));
+                break;
             case "step":
                 float currentRotation = playerObject.getRotation();
                 int cycles = (int) (currentRotation / 360);
@@ -210,8 +218,9 @@ public class GameScreen implements Screen {
 
         for (ActorClass actorClass : goalActorList) {
             Random r = new Random();
-            x = (r.nextInt(5) * tileSize);
-            y = (r.nextInt(5) * tileSize);
+            int tileSize = 32;
+            int x = (r.nextInt(5) * tileSize);
+            int y = (r.nextInt(5) * tileSize);
             actorClass.setBounds(x, y, actorClass.getWidth(), actorClass.getHeight());
             actorClass.sprite.setPosition(x, y);
         }
@@ -232,9 +241,11 @@ public class GameScreen implements Screen {
 
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && measure){
-            mouseY = Gdx.input.getY()/32;
-            mouseX = Gdx.input.getX()/32;
-            mouseY = Gdx.graphics.getHeight()/32-1 - mouseY;
+            int clickCounter = 0;
+            clickCounter++;
+            int firstMouseY = Gdx.input.getY() / 32;
+            int firstMouseX = Gdx.input.getX() / 32;
+            firstMouseY = Gdx.graphics.getHeight()/32-1 - firstMouseY;
             int playerX = (int)playerActor.getX()/32;
             int playerY = (int)playerActor.getY()/32;
             Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
@@ -244,11 +255,12 @@ public class GameScreen implements Screen {
             };
             dialog.text("Your position: " + playerX + "," + playerY);
             dialog.add().row();
-            dialog.text("Target position: " + mouseX + "," + mouseY);
+            dialog.text("Target position: " + firstMouseX + "," + firstMouseY);
             dialog.button("Ok!", true);
             dialog.show(stage);
             measure = false;
         }
+
 
 
 
@@ -314,7 +326,7 @@ public class GameScreen implements Screen {
 
         switch (commandCounter){
             case 2:
-                amountofPoints = 3;
+                int amountofPoints = 3;
                 break;
             case 3:
                 amountofPoints = 2;
