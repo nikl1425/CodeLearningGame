@@ -18,6 +18,7 @@ public class ActorClass extends Actor {
     public List<String> cmdListRepeat;
 
 
+
     public ActorClass(String imagePath, int sizeX, int sizeY){
         setSize(sizeX,sizeY);
         setBounds(getX(), getY() ,getWidth(),getHeight());
@@ -34,7 +35,7 @@ public class ActorClass extends Actor {
         super.draw(batch, parentAlpha);
         sprite.setPosition(getX(),getY());
         sprite.setRotation(getRotation());
-        setDebug(true);
+        //setDebug(true);
         sprite.draw(batch, parentAlpha);
         sprite.rotate(90);
         sprite.setScale(getScaleX(), getScaleY());

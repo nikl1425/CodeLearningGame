@@ -94,6 +94,9 @@ public class LevelScreen implements Screen {
         play.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
+
+
+
                 if(list.getSelected() == "1"){
                     level = 1;
                     worldGenerator = new WorldGenerator(level);
@@ -104,6 +107,29 @@ public class LevelScreen implements Screen {
                 }
                 else if(list.getSelected() == "3"){
                     level = 3;
+                    worldGenerator = new WorldGenerator(level);
+                }else if(list.getSelected() == "4"){
+                    level = 4;
+                    worldGenerator = new WorldGenerator(level);
+                }else if(list.getSelected() == "5"){
+                    level = 5;
+                    worldGenerator = new WorldGenerator(level);
+                }else if(list.getSelected() == "6"){
+                    level = 6;
+                    worldGenerator = new WorldGenerator(level);
+                }else if(list.getSelected() == "7"){
+                    level = 7;
+                    worldGenerator = new WorldGenerator(level);
+                }else if(list.getSelected() == "8"){
+                    level = 8;
+                    worldGenerator = new WorldGenerator(level);
+                }
+                else if(list.getSelected() == "9"){
+                    level = 9;
+                    worldGenerator = new WorldGenerator(level);
+                }
+                else if(list.getSelected() == "10"){
+                    level = 10;
                     worldGenerator = new WorldGenerator(level);
                 }
                 //((Game) Gdx.app.getApplicationListener()).setScreen(new com.screens.GameScreen());

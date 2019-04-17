@@ -2,33 +2,40 @@ package com.screens;
 
 import com.TiledMap.GameMap;
 import com.TiledMap.TiledGameMap;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gameObjects.ActorClass;
 import com.gameObjects.TextInputField;
 import com.gameObjects.WorldGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 
 //import com.gameObjects.goalClass;
 
 public class GameScreen implements Screen {
-
     GameMap gameMap;
     String tiledGameMap;
     TextInputField textInputField;
     WorldGenerator worldGenerator;
     private OrthographicCamera camera;
+    private SpriteBatch spriteBatch;
     private Stage stage;
     private ActorClass playerActor;
     private List<ActorClass> goalActorList = new ArrayList<>();
@@ -140,21 +147,29 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.update();
+        FitViewport viewp = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),camera);
+        spriteBatch = new SpriteBatch();
+        stage = new Stage(viewp, spriteBatch);
+
+
         Gdx.graphics.getDisplayMode();
         Gdx.input.setInputProcessor(stage);
         playerActor = new ActorClass("images/player.png", w, w);
         playerActor.sprite.setOrigin(playerActor.getWidth() / 2, playerActor.getHeight() / 2);
         playerActor.setX(playerX);
         playerActor.setY(playerY);
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.update();
+
         gameMap = new TiledGameMap(tiledGameMap);
         textInputField = new TextInputField(640, 0, 240, 60, 240, 640);
+        stage.addActor(gameMap);
         stage.addActor(playerActor);
         stage.addActor(textInputField.textArea);
         stage.addActor(textInputField.textButton);
+        stage.getRoot().getColor().a = 0;
+        stage.getRoot().addAction(fadeIn(1f));
 
 
         textInputField.textButton.addListener(new ClickListener() {
@@ -162,7 +177,6 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent e, float x, float y) {
                 playerActor.setCommands(validateInput(textInputField.textArea.getText()));
                 textInputField.textArea.setText("");
-
                 //System.out.println(lvlBegun);
             }
         });
@@ -190,9 +204,11 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gameMap.render(camera);
+        gameMap.update(delta);
+        camera.update();
         stage.act(delta);
         stage.draw();
-       // System.out.println(commandCounter);
+
 
         playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth() / 2, playerActor.getHeight() / 2);
 
@@ -228,9 +244,17 @@ public class GameScreen implements Screen {
 
 
                 if (amountGoals == 0) {
-                    int newLvl = level + 1;
-                    goalActorList.clear();
-                    worldGenerator = new WorldGenerator(newLvl);
+                    dialog.text("You have won - Maximum points awarded! Do you want to continue?");
+                    dialog.button("Yes", true);
+                    dialog.button("No", false);
+                    dialog.show(stage);
+
+                    if (dialog.equals(true)){
+                        int newLvl = level + 1;
+                        goalActorList.clear();
+                        worldGenerator = new WorldGenerator(newLvl);
+                    }
+
                 }
             }
         }
@@ -258,6 +282,15 @@ public class GameScreen implements Screen {
         this.amountGoals = amountGoals;
     }
 
+    Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+    Dialog dialog = new Dialog("Warning", uiSkin , "Dialog"){
+        public void result(Object obj){
+            System.out.println("result " + obj);
+        }
+    };
+
+
+
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -279,5 +312,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+
     }
 }

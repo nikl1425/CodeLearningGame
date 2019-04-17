@@ -3,8 +3,9 @@
 package com.TiledMap;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public abstract class GameMap {
+public abstract class GameMap extends Actor {
 
     public abstract void render (OrthographicCamera camera);
     public abstract void update (float delta);
@@ -28,8 +29,8 @@ public abstract class GameMap {
      *
      * @return
      */
-    public abstract int getWidth();
-    public abstract int getHeight();
+    public abstract float getWidth();
+    public abstract float getHeight();
     public abstract int getLayers();
 
 }

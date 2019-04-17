@@ -2,19 +2,35 @@ package com.gameObjects;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.screens.GameScreen;
 
-public class WorldGenerator {
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 
+public class WorldGenerator {
+    Stage stage;
+
+    public void switchScreen(final Game game, final Screen newScreen){
+        stage.getRoot().getColor().a = 1;
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(fadeOut(0.5f));
+        sequenceAction.addAction(run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(newScreen);
+            }
+        }));
+    }
 
     public WorldGenerator(int newLevel){
 
         if(newLevel == 1){
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,1,1,"maps/LTC.tmx"));
-        }
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,1,1,"maps/LTC.tmx")); }
         else if(newLevel == 2){
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,2,2,"maps/tiledmap.tmx"));
-        }
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,2,2,"maps/tiledmap.tmx")); }
         else if(newLevel == 3){
             ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,3,3,"maps/LTC.tmx"));
         }else if(newLevel == 4){
