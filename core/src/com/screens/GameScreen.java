@@ -68,14 +68,14 @@ public class GameScreen implements Screen {
             cmd0 = cmdArray[index].split(" ");
             if (validateCommand(cmd0)) {
                 if (cmd0[0].equals("repeat")) {
-                    System.out.println("REPEAT");
+                    //System.out.println("REPEAT");
                     boolean cmdIsValid = true;
                     for (int subIndex = index + 1; subIndex < cmdArray.length; subIndex++) {
                         cmd1 = cmdArray[subIndex].split(" ");
                         cmdIsValid &= validateCommand(cmd1);
                         if (cmdIsValid) {
                             if (cmd1[0].equals("break")) {
-                                System.out.println("BREAK");
+                                //System.out.println("BREAK");
                                 repeatEndIndex = subIndex;
                                 break;
                             }
@@ -289,7 +289,7 @@ public class GameScreen implements Screen {
                 Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
                 dialog = new Dialog("Warning", uiSkin , "Dialog"){
                     public void result(Object obj){
-                        System.out.println("result " + obj);
+                        //System.out.println("result " + obj);
                         if (obj.toString().equals("true")){
                             int newLvl = level + 1;
                             goalActorList.clear();
