@@ -8,6 +8,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -24,11 +30,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 //import com.gameObjects.goalClass;
 
 public class GameScreen implements Screen {
     private GameMap gameMap;
+    //private TiledGameMap gameMap;
+    private TiledMap gm;
     private String tiledGameMap;
     private TextInputField textInputField;
     private TextInputField textInputField1;
@@ -47,6 +56,7 @@ public class GameScreen implements Screen {
     private int commandCounter;
     private boolean measure;
     private Dialog dialog;
+    public static SequenceAction cmdsToExecute = Actions.sequence();
 
 
     public ArrayList<String[]> validateInput(String input) {
@@ -109,9 +119,8 @@ public class GameScreen implements Screen {
         return false;
     }
 
-
     public static SequenceAction parseCommands(String[] input, ActorClass playerObject) {
-        SequenceAction cmdsToExecute = Actions.sequence();
+
         String[] cmdSplit = input;
         switch (cmdSplit[0]) {
             case "-step":
@@ -170,7 +179,6 @@ public class GameScreen implements Screen {
         spriteBatch = new SpriteBatch();
         stage = new Stage(viewp, spriteBatch);
 
-
         Gdx.graphics.getDisplayMode();
         Gdx.input.setInputProcessor(stage);
         playerActor = new ActorClass("images/player.png", w, w);
@@ -179,6 +187,7 @@ public class GameScreen implements Screen {
         playerActor.setY(playerY);
 
         gameMap = new TiledGameMap(tiledGameMap);
+
         textInputField = new TextInputField(640, 0, 240, 60, 240, 640);
         textInputField1 = new TextInputField(640,60,240,60,240,120);
         stage.addActor(gameMap);
@@ -209,22 +218,53 @@ public class GameScreen implements Screen {
         });
 
 
-
-
         for (int i = 0; i < amountGoals; i++) {
             goalActorList.add(new ActorClass("images/diamond.png", w, w));
             stage.addActor(goalActorList.get(i));
         }
+        //SET GOALS RIP THIS HARDCODED SHIET
+        if(level == 1){
+            goalActorList.get(0).setBounds(5*w,5*w, w,w);
+            goalActorList.get(0).setPosition(5*w,5*w);
+        } else if(level == 2){
+            goalActorList.get(0).setBounds(8*w,8*w, w,w);
+            goalActorList.get(0).setPosition(8*w,8*w);
+            goalActorList.get(1).setBounds(4*w,2*w, w,w);
+            goalActorList.get(1).setPosition(4*w,2*w);
+        }else if(level == 3){
+            goalActorList.get(0).setBounds(8*w,8*w, w,w);
+            goalActorList.get(0).setPosition(8*w,8*w);
+            goalActorList.get(1).setBounds(4*w,2*w, w,w);
+            goalActorList.get(1).setPosition(4*w,2*w);
+            goalActorList.get(2).setBounds(1*w,1*w, w,w);
+            goalActorList.get(2).setPosition(1*w,1*w);
+        }else if(level == 4){
+            goalActorList.get(0).setBounds(8*w,8*w, w,w);
+            goalActorList.get(0).setPosition(8*w,8*w);
+            goalActorList.get(1).setBounds(4*w,2*w, w,w);
+            goalActorList.get(1).setPosition(4*w,2*w);
+            goalActorList.get(2).setBounds(1*w,1*w, w,w);
+            goalActorList.get(2).setPosition(1*w,1*w);
+            goalActorList.get(3).setBounds(6*w,6*w, w,w);
+            goalActorList.get(3).setPosition(6*w,6*w);
+        }
 
-        for (ActorClass actorClass : goalActorList) {
+
+        /*for (ActorClass actorClass : goalActorList) {
             Random r = new Random();
             int tileSize = 32;
             int x = (r.nextInt(5) * tileSize);
             int y = (r.nextInt(5) * tileSize);
             actorClass.setBounds(x, y, actorClass.getWidth(), actorClass.getHeight());
             actorClass.sprite.setPosition(x, y);
-        }
+        }*/
 
+        /*for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                System.out.print(" , " +  gameMap.getTileTypeByCoordinate(1,j,i));
+            }
+            System.out.println(" ");
+        }*/
 
     }
 
@@ -261,10 +301,6 @@ public class GameScreen implements Screen {
             measure = false;
         }
 
-
-
-
-
         playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth() / 2, playerActor.getHeight() / 2);
 
         if (playerActor.getActions().size > 0) {
@@ -274,17 +310,52 @@ public class GameScreen implements Screen {
             textInputField.textButton.setText("Run!");
         }
 
-        if (lvlBegun == true && playerActor.getActions().size <= 0 && amountGoals >= 1){
+        /*if (lvlBegun == true && playerActor.getActions().size <= 0 && amountGoals >= 1){
              worldGenerator = new WorldGenerator(level);
             //System.out.println("RESTART GAME HERE!");
-        }
+        }*/
 
 
+        //COLLISION
+        if(!gameMap.getTileTypeByCoordinate(1,(int)playerActor.getX()/w,(int)playerActor.getY()/w).isCollidable()){
+            playerActor.cmdList.clear();
+            playerActor.cmdListRepeat.clear();
+            cmdsToExecute.reset();
+            playerActor.setX(18*w);
+            playerActor.setY(18*w);
+
+
+            System.out.println("COLLIDE");
+            Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+            dialog = new Dialog("Warning", uiSkin , "Dialog"){
+                public void result(Object obj){
+
+                    //System.out.println("result " + obj);
+                    if (obj.toString().equals("true")){
+                        goalActorList.clear();
+                        worldGenerator = new WorldGenerator(level);
+                    }else if (obj.toString().equals("false")){
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                    }
+                }
+            };
+
+                dialog.text("Dude! You fell in the water! Try again.");
+                dialog.button("Lets go!", true);
+                dialog.button("Nope!", false);
+                dialog.show(stage);
+
+            }
+
+
+        //SET GOALS
         for (int i = 0; i < amountGoals; i++) {
             goalActorList.get(i).sprite.setOrigin(goalActorList.get(i).getWidth() / 2, goalActorList.get(i).getHeight() / 2);
             //System.out.println(amountGoals);
 
         }
+
+        //WHEN PLAYER GET GOAL
         for (Iterator<ActorClass> iterator = goalActorList.iterator(); iterator.hasNext(); ) {
             ActorClass actorGoal = iterator.next();
             float goalX = actorGoal.getX();

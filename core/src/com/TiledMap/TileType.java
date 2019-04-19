@@ -7,18 +7,18 @@ public enum TileType {
 
     GRASS(302, true, "Grass"),
     ROCKGROUND(98, true, "Rockground"),
-    WATER(125, false, "Water");
+    WATER(125, false, "Water"),
 
+    WATERTL(463, false, "WaterTL"),
+    WATERT(464, false, "WaterT"),
+    WATERTR(465, false, "WaterTR"),
+    WATERL(495, false, "waterL"),
+    WATERM(496, false, "waterM"),
+    WATERR(497, false, "waterR"),
+    WATERDL(527, false, "waterDL"),
+    WATERD(528, false, "waterD"),
+    WATERDR(529, false, "waterDR");
 
-
-/*
-    GRASS(1, true, "Grass"),
-    DIRT(2, true, "Dirt"),
-    SKY(3, false, "Sky"),
-    LAVA(4, true, "Lava"),
-    CLOUD(5, true, "Cloud"),
-    STONE(6, true, "Stone");
-    */
 
     public static final int TILE_SIZE = 32;
 

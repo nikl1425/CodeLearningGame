@@ -1,6 +1,7 @@
 package com.TiledMap;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -12,7 +13,8 @@ public class TiledGameMap extends GameMap {
     //TmxMapLoader tiledMap;
     TiledMap tiledMap;
     OrthogonalTiledMapRenderer tiledMapRenderer;
-    TiledMapTileLayer layer;
+    public TiledMapTileLayer layer;
+    public MapObjects objects;
 
 
 

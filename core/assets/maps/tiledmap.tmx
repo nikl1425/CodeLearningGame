@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="11">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="left-down" width="20" height="20" tilewidth="32" tileheight="32" infinite="0" nextobjectid="11">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="terrain.png" width="1024" height="1024"/>
  </tileset>
- <layer id="1" name="Tile Layer 1" width="20" height="20">
+ <layer name="Tile Layer 1" width="20" height="20">
   <data encoding="csv">
 302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,
 302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,
@@ -27,7 +27,7 @@
 302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302,302
 </data>
  </layer>
- <layer id="2" name="Tile Layer 2" width="20" height="20">
+ <layer name="Tile Layer 2" width="20" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -51,7 +51,7 @@
 129,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,130,131
 </data>
  </layer>
- <objectgroup id="9" name="objects">
+ <objectgroup name="objects">
   <object id="3" x="31" y="295" width="100" height="93"/>
   <object id="4" x="512" y="509" width="102" height="102"/>
   <object id="5" x="111" y="360"/>
@@ -61,7 +61,7 @@
   <object id="9" x="447" y="12" width="193" height="147"/>
   <object id="10" x="318" y="5" width="63" height="58"/>
  </objectgroup>
- <layer id="3" name="Tile Layer 3" width="20" height="20">
+ <layer name="Tile Layer 3" width="20" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,269,270,270,270,270,270,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,92,93,93,93,93,94,
@@ -85,7 +85,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="4" name="Tile Layer 4" width="20" height="20">
+ <layer name="Tile Layer 4" width="20" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,635,636,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,667,668,0,0,0,0,0,0,0,0,
