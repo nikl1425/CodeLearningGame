@@ -8,12 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -25,12 +20,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gameObjects.ActorClass;
 import com.gameObjects.TextInputField;
 import com.gameObjects.WorldGenerator;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 //import com.gameObjects.goalClass;
 
@@ -56,7 +51,7 @@ public class GameScreen implements Screen {
     private int commandCounter;
     private boolean measure;
     private Dialog dialog;
-    public static SequenceAction cmdsToExecute = Actions.sequence();
+
 
 
     public ArrayList<String[]> validateInput(String input) {
@@ -105,23 +100,24 @@ public class GameScreen implements Screen {
         if (cmd == null || cmd.length == 0) return false;
         switch (cmd[0]) {
             case "-step":
-                return cmd.length == 2 && cmd[1].matches("\\d");
+                return cmd.length == 2 && cmd[1].matches("^[0-9]*$");
             case "step":
-                return cmd.length == 2 && cmd[1].matches("\\d");
+                return cmd.length == 2 && cmd[1].matches("^[0-9]*$");
             case "turn":
                 if (cmd.length != 2) return false;
                 return cmd[1].equals("left") || cmd[1].equals("right");
             case "repeat":
-                return cmd.length == 2 && cmd[1].matches("\\d");
+                return cmd.length == 2 && cmd[1].matches("^[0-9]*$");
             case "break":
                 return true;
         }
         return false;
+
     }
 
     public static SequenceAction parseCommands(String[] input, ActorClass playerObject) {
-
         String[] cmdSplit = input;
+        SequenceAction cmdsToExecute = Actions.sequence();
         switch (cmdSplit[0]) {
             case "-step":
                 float currentRotation1 = playerObject.getRotation();
@@ -204,6 +200,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent e, float x, float y) {
                 playerActor.setCommands(validateInput(textInputField.textArea.getText()));
+                System.out.println(validateInput(textInputField.textArea.getText()));
                 textInputField.textArea.setText("");
                 //System.out.println(lvlBegun);
             }
@@ -320,7 +317,8 @@ public class GameScreen implements Screen {
         if(!gameMap.getTileTypeByCoordinate(1,(int)playerActor.getX()/w,(int)playerActor.getY()/w).isCollidable()){
             playerActor.cmdList.clear();
             playerActor.cmdListRepeat.clear();
-            cmdsToExecute.reset();
+            //cmdsToExecute.reset();
+            playerActor.getActions().clear();
             playerActor.setX(18*w);
             playerActor.setY(18*w);
 
