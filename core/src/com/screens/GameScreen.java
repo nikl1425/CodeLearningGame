@@ -51,14 +51,25 @@ public class GameScreen implements Screen {
     private int commandCounter;
     private boolean measure;
     private Dialog dialog;
+    Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
+
+    public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap) {
+        this.playerX = playerX * w;
+        this.playerY = playerY * w;
+        this.tiledGameMap = tiledGameMap;
+        this.level = level;
+        this.amountGoals = amountGoals;
+    }
 
 
     public ArrayList<String[]> validateInput(String input) {
         ArrayList<String[]> cmds = new ArrayList<>();
         String[] cmdArray = input.split("\\n");
         String[] cmd0, cmd1;
+
         int repeatEndIndex = 0;
+        System.out.println("niels");
         for (int index = 0; index < cmdArray.length; index++) {
             cmd0 = cmdArray[index].split(" ");
             if (validateCommand(cmd0)) {
@@ -95,6 +106,7 @@ public class GameScreen implements Screen {
         return cmds;
     }
 
+
     public boolean validateCommand(String[] cmd) {
         commandCounter++;
         if (cmd == null || cmd.length == 0) return false;
@@ -114,6 +126,7 @@ public class GameScreen implements Screen {
         return false;
 
     }
+
 
     public static SequenceAction parseCommands(String[] input, ActorClass playerObject) {
         String[] cmdSplit = input;
@@ -142,6 +155,8 @@ public class GameScreen implements Screen {
                 currentRotation = (currentRotation + 360) % 360;
                 currentRotation = Math.round(currentRotation);
                 int value = Integer.parseInt(cmdSplit[1]);
+                System.out.println(value);
+                //int value = Integer.parseInt(cmdSplit[1]);
                 if (currentRotation == 0)
                     cmdsToExecute.addAction(Actions.moveBy(value * w, 0, (float) value / 5));
                 if (currentRotation == 90)
@@ -163,8 +178,10 @@ public class GameScreen implements Screen {
                 break;
             //cmdsToExecute.addAction(Actions.delay(1));
         }
+
         return cmdsToExecute;
     }
+
 
     @Override
     public void show() {
@@ -186,6 +203,7 @@ public class GameScreen implements Screen {
 
         textInputField = new TextInputField(640, 0, 240, 60, 240, 640);
         textInputField1 = new TextInputField(640,60,240,60,240,120);
+
         stage.addActor(gameMap);
         stage.addActor(playerActor);
         stage.addActor(textInputField.textArea);
@@ -219,31 +237,197 @@ public class GameScreen implements Screen {
             goalActorList.add(new ActorClass("images/diamond.png", w, w));
             stage.addActor(goalActorList.get(i));
         }
-        //SET GOALS RIP THIS HARDCODED SHIET
+        //LEVEL COMMANDER
+        //SET GOAL POSITIONS
+        //SET HELPING DEVICES AT THE BEGINNING OF EACH NEW LEVEL
+        //LEVEL 1 - 4: 1 GOAL
+        //LEVEL 5-8: 2 GOALS
+        //LEVEL 9-10: 4 GOALS
+        //
         if(level == 1){
-            goalActorList.get(0).setBounds(5*w,5*w, w,w);
-            goalActorList.get(0).setPosition(5*w,5*w);
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("Can you fix the code on the right?");
+            dialog.add().row();
+            dialog.text("Make the soldier get the diamond!");
+            dialog.add().row();
+            dialog.text("Hint: Type in 'Step 10'");
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+
+            goalActorList.get(0).setBounds(12*w,2*w, w,w);
+            goalActorList.get(0).setPosition(12*w,2*w);
         } else if(level == 2){
-            goalActorList.get(0).setBounds(8*w,8*w, w,w);
-            goalActorList.get(0).setPosition(8*w,8*w);
-            goalActorList.get(1).setBounds(4*w,2*w, w,w);
-            goalActorList.get(1).setPosition(4*w,2*w);
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("Try add some more digits");
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+
+            goalActorList.get(0).setBounds(18*w,2*w, w,w);
+            goalActorList.get(0).setPosition(18*w,2*w);
         }else if(level == 3){
-            goalActorList.get(0).setBounds(8*w,8*w, w,w);
-            goalActorList.get(0).setPosition(8*w,8*w);
-            goalActorList.get(1).setBounds(4*w,2*w, w,w);
-            goalActorList.get(1).setPosition(4*w,2*w);
-            goalActorList.get(2).setBounds(1*w,1*w, w,w);
-            goalActorList.get(2).setPosition(1*w,1*w);
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("You can turn the soldier by using 'turn left' or 'turn right'");
+            dialog.add().row();
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+            goalActorList.get(0).setBounds(2*w,12*w, w,w);
+            goalActorList.get(0).setPosition(2*w,12*w);
         }else if(level == 4){
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("Lets try that again!");
+            dialog.add().row();
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+            goalActorList.get(0).setBounds(2*w,2*w, w,w);
+            goalActorList.get(0).setPosition(2*w,2*w);
+        } else if(level == 5){
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("You need to get all the diamonds!");
+            dialog.add().row();
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
             goalActorList.get(0).setBounds(8*w,8*w, w,w);
             goalActorList.get(0).setPosition(8*w,8*w);
             goalActorList.get(1).setBounds(4*w,2*w, w,w);
             goalActorList.get(1).setPosition(4*w,2*w);
+        }else if(level == 6){
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("Let's try that again");
+            dialog.add().row();
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+            goalActorList.get(0).setBounds(12*w,6*w, w,w);
+            goalActorList.get(0).setPosition(12*w,6*w);
+            goalActorList.get(1).setBounds(6*w,2*w, w,w);
+            goalActorList.get(1).setPosition(6*w,2*w);
+        }else if(level == 7){
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("We have to avoid the water - the soldier can't swim");
+            dialog.add().row();
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+            goalActorList.get(0).setBounds(4*w,18*w, w,w);
+            goalActorList.get(0).setPosition(8*w,18*w);
+            goalActorList.get(1).setBounds(17*w,16*w, w,w);
+            goalActorList.get(1).setPosition(17*w,16*w);
+        }else if(level == 8){
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("Let's try that again");
+            dialog.add().row();
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+            goalActorList.get(0).setBounds(8*w,2*w, w,w);
+            goalActorList.get(0).setPosition(8*w,8*w);
+            goalActorList.get(1).setBounds(18*w,19*w, w,w);
+            goalActorList.get(1).setPosition(18*w,19*w);
+        }else if(level == 9){
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("Collect all the bananas");
+            dialog.add().row();
+            dialog.text("Use the 'repeat', which will repeat all the actions untill you type 'break'");
+            dialog.text("Hint: Type 'repeat 4', 'step 2', 'break' and the soldier will walk 8 steps");
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+            goalActorList.get(0).setBounds(11*w,2*w, w,w);
+            goalActorList.get(0).setPosition(11*w,2*w);
+            goalActorList.get(1).setBounds(11*w,12*w, w,w);
+            goalActorList.get(1).setPosition(11*w,12*w);
+            goalActorList.get(2).setBounds(1*w,12*w, w,w);
+            goalActorList.get(2).setPosition(1*w,12*w);
+        }else if(level == 10){
+            //DIALOG BOKS
+            dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
+                public void result(Object obj){
+                    if(obj.equals(1L)){
+                        dialog.clear();
+                        dialog.hide();
+                    }
+                }
+            };
+            dialog.text("Let me see what you got");
+            dialog.add().row();
+            dialog.button("OK!", 1L);
+            dialog.show(stage);
+            goalActorList.get(0).setBounds(18*w,6*w, w,w);
+            goalActorList.get(0).setPosition(18*w,6*w);
+            goalActorList.get(1).setBounds(4*w,19*w, w,w);
+            goalActorList.get(1).setPosition(4*w,19*w);
             goalActorList.get(2).setBounds(1*w,1*w, w,w);
             goalActorList.get(2).setPosition(1*w,1*w);
-            goalActorList.get(3).setBounds(6*w,6*w, w,w);
-            goalActorList.get(3).setPosition(6*w,6*w);
+            goalActorList.get(3).setBounds(16*w,16*w, w,w);
+            goalActorList.get(3).setPosition(16*w,16*w);
         }
 
 
@@ -285,7 +469,6 @@ public class GameScreen implements Screen {
             firstMouseY = Gdx.graphics.getHeight()/32-1 - firstMouseY;
             int playerX = (int)playerActor.getX()/32;
             int playerY = (int)playerActor.getY()/32;
-            Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
             dialog = new Dialog("Measure", uiSkin , "Dialog"){
                 public void result(Object obj){
                 }
@@ -322,25 +505,23 @@ public class GameScreen implements Screen {
             playerActor.setX(18*w);
             playerActor.setY(18*w);
 
-
             System.out.println("COLLIDE");
-            Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
             dialog = new Dialog("Warning", uiSkin , "Dialog"){
                 public void result(Object obj){
 
                     //System.out.println("result " + obj);
-                    if (obj.toString().equals("true")){
+                    if (obj.equals(1L)){
                         goalActorList.clear();
                         worldGenerator = new WorldGenerator(level);
-                    }else if (obj.toString().equals("false")){
+                    }else if (obj.equals(2L)){
                         ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                     }
                 }
             };
 
                 dialog.text("Dude! You fell in the water! Try again.");
-                dialog.button("Lets go!", true);
-                dialog.button("Nope!", false);
+                dialog.button("Lets go!", 1L);
+                dialog.button("Nope!", 2L);
                 dialog.show(stage);
 
             }
@@ -361,21 +542,23 @@ public class GameScreen implements Screen {
             float goalWidth = actorGoal.sprite.getWidth();
             float goalHeight = actorGoal.sprite.getHeight();
             actorGoal.rectangle.set(goalX, goalY, goalWidth, goalHeight);
+
             if (actorGoal.rectangle.overlaps(playerActor.rectangle)) {
                 actorGoal.remove();
                 iterator.remove();
                 amountGoals = amountGoals - 1;
 
-
-                Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-                dialog = new Dialog("Warning", uiSkin , "Dialog"){
+                dialog = new Dialog("Challenge #"+level+" completed!", uiSkin , "Dialog"){
                     public void result(Object obj){
                         //System.out.println("result " + obj);
-                        if (obj.toString().equals("true")){
+                        if (obj.equals(1L)){
                             int newLvl = level + 1;
                             goalActorList.clear();
                             worldGenerator = new WorldGenerator(newLvl);
-                        }else if (obj.toString().equals("false")){
+                        }else if (obj.equals(2L)){
+                            goalActorList.clear();
+                            worldGenerator = new WorldGenerator(level);
+                        } else if (obj.equals(3L)){
                             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                         }
                     }
@@ -383,8 +566,9 @@ public class GameScreen implements Screen {
 
                 if (amountGoals == 0) {
                     dialog.text("You have won - Maximum points awarded! Do you want to continue?");
-                    dialog.button("Yes", true);
-                    dialog.button("No", false);
+                    dialog.button("Next challenge!", 1L);
+                    dialog.button("Replay", 2L);
+                    dialog.button("No thanks", 3L);
                     dialog.show(stage);
                 }
 
@@ -407,17 +591,6 @@ public class GameScreen implements Screen {
 
         //System.out.println(amountofPoints);
     }
-
-    public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap) {
-        this.playerX = playerX * w;
-        this.playerY = playerY * w;
-        this.tiledGameMap = tiledGameMap;
-        this.level = level;
-        this.amountGoals = amountGoals;
-    }
-
-
-
 
 
     @Override
