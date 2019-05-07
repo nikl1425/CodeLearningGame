@@ -236,6 +236,7 @@ public class GameScreen implements Screen {
         for (int i = 0; i < amountGoals; i++) {
             goalActorList.add(new ActorClass("images/diamond.png", w, w));
             stage.addActor(goalActorList.get(i));
+
         }
         //LEVEL COMMANDER
         //SET GOAL POSITIONS
@@ -394,7 +395,7 @@ public class GameScreen implements Screen {
                     }
                 }
             };
-            dialog.text("Collect all the bananas");
+            dialog.text("Collect all the diamonds");
             dialog.add().row();
             dialog.text("Use the 'repeat', which will repeat all the actions untill you type 'break'");
             dialog.text("Hint: Type 'repeat 4', 'step 2', 'break' and the soldier will walk 8 steps");
@@ -460,7 +461,7 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
-
+        //MEASURE BUTTON
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && measure){
             int clickCounter = 0;
             clickCounter++;
@@ -497,6 +498,7 @@ public class GameScreen implements Screen {
 
 
         //COLLISION
+
         if(!gameMap.getTileTypeByCoordinate(1,(int)playerActor.getX()/w,(int)playerActor.getY()/w).isCollidable()){
             playerActor.cmdList.clear();
             playerActor.cmdListRepeat.clear();

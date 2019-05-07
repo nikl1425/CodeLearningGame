@@ -17,7 +17,16 @@ public enum TileType {
     WATERR(497, false, "waterR"),
     WATERDL(527, false, "waterDL"),
     WATERD(528, false, "waterD"),
-    WATERDR(529, false, "waterDR");
+    WATERDR(529, false, "waterDR"),
+    BRUSH1(262, false, "bush"),
+    BRUSH2(263, false, "bush"),
+    BRUSH3(264, false, "bush"),
+    BRUSH4(262, false, "bush"),
+    BRUSH5(294, false, "bush"),
+    BRUSH6(295, false, "bush"),
+    BRUSH7(326, false, "bush"),
+    BRUSH8(327, false, "bush"),
+    BRUSH9(328, false, "bush");
 
 
     public static final int TILE_SIZE = 32;
@@ -67,3 +76,4 @@ public enum TileType {
         return tileMap.get(id);
     }
 }
+

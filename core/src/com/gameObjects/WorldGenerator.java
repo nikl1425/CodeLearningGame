@@ -28,7 +28,7 @@ public class WorldGenerator {
     public WorldGenerator(int newLevel){
 
         if(newLevel == 1){
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,1,1,"maps/LTC.tmx")); }
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,1,1,"maps/level4.tmx")); }
         else if(newLevel == 2){
             ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(2,2,1,2,"maps/LTC.tmx")); }
         else if(newLevel == 3){
