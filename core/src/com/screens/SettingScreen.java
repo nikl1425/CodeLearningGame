@@ -3,6 +3,7 @@ package com.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,6 +26,7 @@ public class SettingScreen implements Screen {
     private TextureAtlas atlas;
     ImageFileClass ImageFileClass = new ImageFileClass();
     private SpriteBatch batch;
+    public Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button.mp3"));
 
     public static FileHandle levelDirectory() {
         String prefsDir = Gdx.app.getPreferences(MyGdxGame.TITLE).getString("leveldirectory").trim();
@@ -71,6 +73,7 @@ public class SettingScreen implements Screen {
         ClickListener buttonHandler = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                soundClick.play(1.0f);
                 // event.getListenerActor() returns the source of the event, e.g. a button that was clicked
                 if(event.getListenerActor() == vSyncCheckBox) {
                     // save vSync

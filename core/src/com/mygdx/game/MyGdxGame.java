@@ -9,8 +9,8 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void create () {
-		//setScreen(new com.screens.IntroScreen());
-		setScreen(new com.screens.MenuScreen());
+		setScreen(new com.screens.IntroScreen());
+		//setScreen(new com.screens.MenuScreen());
 
 	}
 
@@ -33,7 +33,6 @@ public class MyGdxGame extends Game {
 	public void resume () {
 	super.resume();
 	}
-
 
 	@Override
 	public void dispose () {

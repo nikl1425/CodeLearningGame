@@ -4,6 +4,7 @@ package com.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -32,9 +33,11 @@ public class LevelScreen implements Screen {
     private TextButton play, back;
     ImageFileClass ImageFileClass = new ImageFileClass();
     WorldGenerator worldGenerator;
+    MenuScreen ms;
     private SpriteBatch batch;
     String[] List;
     public int level;
+    public Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button.mp3"));
 
     private void setupTable(){
         //Samler tingene i table
@@ -94,8 +97,7 @@ public class LevelScreen implements Screen {
         play.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-
-
+                soundClick.play(1.0f);
 
                 if(list.getSelected() == "1"){
                     level = 1;

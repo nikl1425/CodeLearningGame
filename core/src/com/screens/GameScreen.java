@@ -1,10 +1,12 @@
 package com.screens;
+
 import com.TiledMap.GameMap;
 import com.TiledMap.TiledGameMap;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,6 +33,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 
 public class GameScreen implements Screen {
     private GameMap gameMap;
+    MenuScreen ms;
     //private TiledGameMap gameMap;
     private TiledMap gm;
     private String tiledGameMap;
@@ -52,6 +55,10 @@ public class GameScreen implements Screen {
     private boolean measure;
     private Dialog dialog;
     Skin uiSkin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+    private Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button.mp3"));
+    private Sound soundError = Gdx.audio.newSound(Gdx.files.internal("error.mp3"));
+    private Sound soundPoint = Gdx.audio.newSound(Gdx.files.internal("point.mp3"));
+    private Sound soundWin = Gdx.audio.newSound(Gdx.files.internal("win.mp3"));
 
 
     public GameScreen(int playerX, int playerY, int amountGoals, int level, String tiledGameMap) {
@@ -60,6 +67,7 @@ public class GameScreen implements Screen {
         this.tiledGameMap = tiledGameMap;
         this.level = level;
         this.amountGoals = amountGoals;
+
     }
 
 
@@ -69,18 +77,17 @@ public class GameScreen implements Screen {
         String[] cmd0, cmd1;
 
         int repeatEndIndex = 0;
-        System.out.println("niels");
         for (int index = 0; index < cmdArray.length; index++) {
             cmd0 = cmdArray[index].split(" ");
             if (validateCommand(cmd0)) {
-                if (cmd0[0].equals("repeat")) {
+                if (cmd0[0].equals("gentag")) {
                     //System.out.println("REPEAT");
                     boolean cmdIsValid = true;
                     for (int subIndex = index + 1; subIndex < cmdArray.length; subIndex++) {
                         cmd1 = cmdArray[subIndex].split(" ");
                         cmdIsValid &= validateCommand(cmd1);
                         if (cmdIsValid) {
-                            if (cmd1[0].equals("break")) {
+                            if (cmd1[0].equals("slut")) {
                                 //System.out.println("BREAK");
                                 repeatEndIndex = subIndex;
                                 break;
@@ -111,16 +118,16 @@ public class GameScreen implements Screen {
         commandCounter++;
         if (cmd == null || cmd.length == 0) return false;
         switch (cmd[0]) {
-            case "-step":
+            case "-gå":
                 return cmd.length == 2 && cmd[1].matches("^[0-9]*$");
-            case "step":
+            case "gå":
                 return cmd.length == 2 && cmd[1].matches("^[0-9]*$");
-            case "turn":
+            case "drej":
                 if (cmd.length != 2) return false;
-                return cmd[1].equals("left") || cmd[1].equals("right");
-            case "repeat":
+                return cmd[1].equals("venstre") || cmd[1].equals("højre");
+            case "gentag":
                 return cmd.length == 2 && cmd[1].matches("^[0-9]*$");
-            case "break":
+            case "slut":
                 return true;
         }
         return false;
@@ -132,7 +139,7 @@ public class GameScreen implements Screen {
         String[] cmdSplit = input;
         SequenceAction cmdsToExecute = Actions.sequence();
         switch (cmdSplit[0]) {
-            case "-step":
+            case "-gå":
                 float currentRotation1 = playerObject.getRotation();
                 int cycles1 = (int) (currentRotation1 / 360);
                 currentRotation1 = currentRotation1 - Math.signum(currentRotation1) * 360 * cycles1;
@@ -148,7 +155,7 @@ public class GameScreen implements Screen {
                 if (currentRotation1 == 270)
                     cmdsToExecute.addAction(Actions.moveBy(0, value1 * w, (float) value1 / 5));
                 break;
-            case "step":
+            case "gå":
                 float currentRotation = playerObject.getRotation();
                 int cycles = (int) (currentRotation / 360);
                 currentRotation = currentRotation - Math.signum(currentRotation) * 360 * cycles;
@@ -166,12 +173,12 @@ public class GameScreen implements Screen {
                 if (currentRotation == 270)
                     cmdsToExecute.addAction(Actions.moveBy(0, -value * w, (float) value / 5));
                 break;
-            case "turn":
+            case "drej":
                 switch (cmdSplit[1]) {
-                    case "left":
+                    case "venstre":
                         cmdsToExecute.addAction(Actions.rotateBy(90, 0.5f));
                         break;
-                    case "right":
+                    case "højre":
                         cmdsToExecute.addAction(Actions.rotateBy(-90, 0.5f));
                         break;
                 }
@@ -198,6 +205,8 @@ public class GameScreen implements Screen {
         playerActor.sprite.setOrigin(playerActor.getWidth() / 2, playerActor.getHeight() / 2);
         playerActor.setX(playerX);
         playerActor.setY(playerY);
+        playerActor.setRotation(90);
+
 
         gameMap = new TiledGameMap(tiledGameMap);
 
@@ -217,22 +226,24 @@ public class GameScreen implements Screen {
         textInputField.textButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
+                soundClick.play(1.0f);
                 playerActor.setCommands(validateInput(textInputField.textArea.getText()));
                 System.out.println(validateInput(textInputField.textArea.getText()));
                 textInputField.textArea.setText("");
-                //System.out.println(lvlBegun);
+
             }
         });
-        textInputField1.textButton.setText("Measure!");
 
+        textInputField1.textButton.setText("Lineal");
         textInputField1.textButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
+                soundClick.play(1.0f);
                 measure = true;
             }
         });
 
-
+        //IMPORT GOALS
         for (int i = 0; i < amountGoals; i++) {
             goalActorList.add(new ActorClass("images/diamond.png", w, w));
             stage.addActor(goalActorList.get(i));
@@ -250,69 +261,77 @@ public class GameScreen implements Screen {
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("Can you fix the code on the right?");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
             dialog.add().row();
-            dialog.text("Make the soldier get the diamond!");
+            dialog.text("Du skal hente diamanten!");
             dialog.add().row();
-            dialog.text("Hint: Type in 'Step 10'");
+            dialog.text("Hint: Prøv at skriv 'gå 10'");
             dialog.button("OK!", 1L);
             dialog.show(stage);
 
-            goalActorList.get(0).setBounds(12*w,2*w, w,w);
-            goalActorList.get(0).setPosition(12*w,2*w);
+            goalActorList.get(0).setBounds(10*w,12*w, w,w);
+            goalActorList.get(0).setPosition(10*w,12*w);
         } else if(level == 2){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("Try add some more digits");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Du kan også dreje soldaten! Prøv 'drej højre' eller 'drej venstre'");
             dialog.button("OK!", 1L);
             dialog.show(stage);
 
-            goalActorList.get(0).setBounds(18*w,2*w, w,w);
-            goalActorList.get(0).setPosition(18*w,2*w);
+            goalActorList.get(0).setBounds(15*w,10*w, w,w);
+            goalActorList.get(0).setPosition(15*w,10*w);
         }else if(level == 3){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("You can turn the soldier by using 'turn left' or 'turn right'");
-            dialog.add().row();
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Lad os prøve det igen!");
             dialog.button("OK!", 1L);
             dialog.show(stage);
-            goalActorList.get(0).setBounds(2*w,12*w, w,w);
-            goalActorList.get(0).setPosition(2*w,12*w);
+            goalActorList.get(0).setBounds(15*w,12*w, w,w);
+            goalActorList.get(0).setPosition(15*w,12*w);
         }else if(level == 4){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("Lets try that again!");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Vi skal have alle diamanterne for at klare dette level!");
             dialog.add().row();
             dialog.button("OK!", 1L);
             dialog.show(stage);
-            goalActorList.get(0).setBounds(2*w,2*w, w,w);
-            goalActorList.get(0).setPosition(2*w,2*w);
+            goalActorList.get(0).setBounds(9*w,17*w, w,w);
+            goalActorList.get(0).setPosition(9*w,17*w);
+            goalActorList.get(1).setBounds(19*w,17*w, w,w);
+            goalActorList.get(1).setPosition(19*w,17*w);
         } else if(level == 5){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
@@ -323,30 +342,31 @@ public class GameScreen implements Screen {
                     }
                 }
             };
-            dialog.text("You need to get all the diamonds!");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Vi skal uden om forhindringen!");
             dialog.add().row();
             dialog.button("OK!", 1L);
             dialog.show(stage);
-            goalActorList.get(0).setBounds(8*w,8*w, w,w);
-            goalActorList.get(0).setPosition(8*w,8*w);
-            goalActorList.get(1).setBounds(4*w,2*w, w,w);
-            goalActorList.get(1).setPosition(4*w,2*w);
+            goalActorList.get(0).setBounds(10*w,18*w, w,w);
+            goalActorList.get(0).setPosition(10*w,18*w);
         }else if(level == 6){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("Let's try that again");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Lad os prøve det igen!");
             dialog.add().row();
             dialog.button("OK!", 1L);
             dialog.show(stage);
-            goalActorList.get(0).setBounds(12*w,6*w, w,w);
-            goalActorList.get(0).setPosition(12*w,6*w);
+            goalActorList.get(0).setBounds(6*w,16*w, w,w);
+            goalActorList.get(0).setPosition(6*w,16*w);
             goalActorList.get(1).setBounds(6*w,2*w, w,w);
             goalActorList.get(1).setPosition(6*w,2*w);
         }else if(level == 7){
@@ -354,70 +374,79 @@ public class GameScreen implements Screen {
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("We have to avoid the water - the soldier can't swim");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Gør det nemmere ved at bruge 'Gentag'. Det gentager alt hvad du skriver nedenunder - husk at slut af med at skrive 'slut'");
             dialog.add().row();
             dialog.button("OK!", 1L);
             dialog.show(stage);
-            goalActorList.get(0).setBounds(4*w,18*w, w,w);
-            goalActorList.get(0).setPosition(8*w,18*w);
-            goalActorList.get(1).setBounds(17*w,16*w, w,w);
-            goalActorList.get(1).setPosition(17*w,16*w);
+            goalActorList.get(0).setBounds(5*w,14*w, w,w);
+            goalActorList.get(0).setPosition(5*w,14*w);
+            goalActorList.get(1).setBounds(15*w,14*w, w,w);
+            goalActorList.get(1).setPosition(15*w,14*w);
+            goalActorList.get(2).setBounds(15*w,4*w, w,w);
+            goalActorList.get(2).setPosition(15*w,4*w);
         }else if(level == 8){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("Let's try that again");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Lad os prøve igen med 'gentag'");
             dialog.add().row();
             dialog.button("OK!", 1L);
             dialog.show(stage);
-            goalActorList.get(0).setBounds(8*w,2*w, w,w);
-            goalActorList.get(0).setPosition(8*w,8*w);
-            goalActorList.get(1).setBounds(18*w,19*w, w,w);
-            goalActorList.get(1).setPosition(18*w,19*w);
+            goalActorList.get(0).setBounds(3*w,18*w, w,w);
+            goalActorList.get(0).setPosition(3*w,18*w);
+            goalActorList.get(1).setBounds(8*w,18*w, w,w);
+            goalActorList.get(1).setPosition(8*w,18*w);
+            goalActorList.get(2).setBounds(13*w,18*w, w,w);
+            goalActorList.get(2).setPosition(13*w,18*w);
         }else if(level == 9){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("Collect all the diamonds");
-            dialog.add().row();
-            dialog.text("Use the 'repeat', which will repeat all the actions untill you type 'break'");
-            dialog.text("Hint: Type 'repeat 4', 'step 2', 'break' and the soldier will walk 8 steps");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Kan du få alle diamanterne, uden at ramme forhindringerne?");
             dialog.button("OK!", 1L);
             dialog.show(stage);
-            goalActorList.get(0).setBounds(11*w,2*w, w,w);
-            goalActorList.get(0).setPosition(11*w,2*w);
-            goalActorList.get(1).setBounds(11*w,12*w, w,w);
-            goalActorList.get(1).setPosition(11*w,12*w);
-            goalActorList.get(2).setBounds(1*w,12*w, w,w);
-            goalActorList.get(2).setPosition(1*w,12*w);
+            goalActorList.get(0).setBounds(8*w,6*w, w,w);
+            goalActorList.get(0).setPosition(8*w,6*w);
+            goalActorList.get(1).setBounds(13*w,11*w, w,w);
+            goalActorList.get(1).setPosition(13*w,11*w);
+            goalActorList.get(2).setBounds(18*w,16*w, w,w);
+            goalActorList.get(2).setPosition(18*w,16*w);
         }else if(level == 10){
             //DIALOG BOKS
             dialog = new Dialog("Level "+level, uiSkin , "Dialog"){
                 public void result(Object obj){
                     if(obj.equals(1L)){
+                        soundClick.play(1.0f);
                         dialog.clear();
                         dialog.hide();
                     }
                 }
             };
-            dialog.text("Let me see what you got");
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Lad mig se hvad du har lært!");
             dialog.add().row();
             dialog.button("OK!", 1L);
             dialog.show(stage);
@@ -461,6 +490,12 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
+        //ESCAPE MENU
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
+        }
+
+
         //MEASURE BUTTON
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && measure){
             int clickCounter = 0;
@@ -470,14 +505,28 @@ public class GameScreen implements Screen {
             firstMouseY = Gdx.graphics.getHeight()/32-1 - firstMouseY;
             int playerX = (int)playerActor.getX()/32;
             int playerY = (int)playerActor.getY()/32;
-            dialog = new Dialog("Measure", uiSkin , "Dialog"){
+            dialog = new Dialog("Lineal", uiSkin , "Dialog"){
                 public void result(Object obj){
+                    soundClick.play(1.0f);
                 }
             };
-            dialog.text("Your position: " + playerX + "," + playerY);
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Din position: " + playerX + "," + playerY);
             dialog.add().row();
-            dialog.text("Target position: " + firstMouseX + "," + firstMouseY);
-            dialog.button("Ok!", true);
+            if(goalActorList.size()>0) {
+                dialog.text(" Første diamant: " + (int)goalActorList.get(0).getX()/w + "," + (int)goalActorList.get(0).getY()/w);
+                if(goalActorList.size()>1){
+                    dialog.text(" Anden diamant: " + (int)goalActorList.get(1).getX()/w + "," + (int)goalActorList.get(1).getY()/w);
+                    if(goalActorList.size()>2){
+                        dialog.text(" Tredje diamant: " + (int)goalActorList.get(2).getX()/w + "," + (int)goalActorList.get(2).getY()/w);
+                        if(goalActorList.size()>3){
+                            dialog.text(" Fjerde diamant: " + (int)goalActorList.get(3).getX()/w + "," + (int)goalActorList.get(3).getY()/w);
+                        }
+                    }
+                }
+
+            }
+            dialog.button("OK!", true);
             dialog.show(stage);
             measure = false;
         }
@@ -485,12 +534,14 @@ public class GameScreen implements Screen {
         playerActor.rectangle.set(playerActor.getX(), playerActor.getY(), playerActor.sprite.getWidth() / 2, playerActor.getHeight() / 2);
 
         if (playerActor.getActions().size > 0) {
-            textInputField.textButton.setText("Compiling!");
+            textInputField.textButton.setText("Kalkulerer....");
             lvlBegun = true;
         } else {
-            textInputField.textButton.setText("Run!");
+            textInputField.textButton.setText("KØR!");
         }
 
+
+        //IF NOT COMPLETED
         /*if (lvlBegun == true && playerActor.getActions().size <= 0 && amountGoals >= 1){
              worldGenerator = new WorldGenerator(level);
             //System.out.println("RESTART GAME HERE!");
@@ -498,35 +549,75 @@ public class GameScreen implements Screen {
 
 
         //COLLISION
+        if(playerActor.getX()/w<19 && playerActor.getX()/w>0 && playerActor.getY()/w<19 && playerActor.getY()/w>0) {
 
-        if(!gameMap.getTileTypeByCoordinate(1,(int)playerActor.getX()/w,(int)playerActor.getY()/w).isCollidable()){
+            if (!gameMap.getTileTypeByCoordinate(1, (int) playerActor.getX() / w, (int) playerActor.getY() / w).isCollidable()) {
+                playerActor.cmdList.clear();
+                playerActor.cmdListRepeat.clear();
+                //cmdsToExecute.reset();
+                playerActor.getActions().clear();
+                playerActor.setX(18 * w);
+                playerActor.setY(18 * w);
+
+                soundError.play(1.0f);
+
+                System.out.println("COLLIDE");
+                dialog = new Dialog("ADVARSEL", uiSkin, "Dialog") {
+                    public void result(Object obj) {
+
+                        //System.out.println("result " + obj);
+                        if (obj.equals(1L)) {
+                            soundClick.play(1.0f);
+                            goalActorList.clear();
+                            worldGenerator = new WorldGenerator(level);
+                        } else if (obj.equals(2L)) {
+                            soundClick.play(1.0f);
+                            ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        }
+                    }
+                };
+
+                dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+                dialog.text("Hovsa... Lad os prøve igen!");
+                dialog.button("JA!", 1L);
+                dialog.button("NEJ!", 2L);
+                dialog.show(stage);
+
+            }
+        } else {
             playerActor.cmdList.clear();
             playerActor.cmdListRepeat.clear();
             //cmdsToExecute.reset();
             playerActor.getActions().clear();
-            playerActor.setX(18*w);
-            playerActor.setY(18*w);
+            playerActor.setX(5 * w);
+            playerActor.setY(5 * w);
 
-            System.out.println("COLLIDE");
-            dialog = new Dialog("Warning", uiSkin , "Dialog"){
-                public void result(Object obj){
+            soundError.play(1.0f);
+
+            dialog = new Dialog("ADVARSEL", uiSkin, "Dialog") {
+                public void result(Object obj) {
 
                     //System.out.println("result " + obj);
-                    if (obj.equals(1L)){
+                    if (obj.equals(1L)) {
+                        soundClick.play(1.0f);
                         goalActorList.clear();
                         worldGenerator = new WorldGenerator(level);
-                    }else if (obj.equals(2L)){
+                    } else if (obj.equals(2L)) {
+                        soundClick.play(1.0f);
                         ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                     }
                 }
             };
 
-                dialog.text("Dude! You fell in the water! Try again.");
-                dialog.button("Lets go!", 1L);
-                dialog.button("Nope!", 2L);
-                dialog.show(stage);
+            dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+            dialog.text("Hovsa... Lad os prøve igen!");
+            dialog.button("JA!", 1L);
+            dialog.button("NEJ!", 2L);
+            dialog.show(stage);
 
-            }
+        }
+
+        //}
 
 
         //SET GOALS
@@ -546,31 +637,41 @@ public class GameScreen implements Screen {
             actorGoal.rectangle.set(goalX, goalY, goalWidth, goalHeight);
 
             if (actorGoal.rectangle.overlaps(playerActor.rectangle)) {
+                soundPoint.play(1.0f);
                 actorGoal.remove();
                 iterator.remove();
                 amountGoals = amountGoals - 1;
 
-                dialog = new Dialog("Challenge #"+level+" completed!", uiSkin , "Dialog"){
+                dialog = new Dialog("Level #"+level+" er klaret!", uiSkin , "Dialog"){
                     public void result(Object obj){
                         //System.out.println("result " + obj);
                         if (obj.equals(1L)){
+                            soundClick.play(1.0f);
                             int newLvl = level + 1;
                             goalActorList.clear();
                             worldGenerator = new WorldGenerator(newLvl);
                         }else if (obj.equals(2L)){
+                            soundClick.play(1.0f);
                             goalActorList.clear();
                             worldGenerator = new WorldGenerator(level);
                         } else if (obj.equals(3L)){
+                            soundClick.play(1.0f);
                             ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                         }
                     }
                 };
 
                 if (amountGoals == 0) {
-                    dialog.text("You have won - Maximum points awarded! Do you want to continue?");
-                    dialog.button("Next challenge!", 1L);
-                    dialog.button("Replay", 2L);
-                    dialog.button("No thanks", 3L);
+                    playerActor.cmdList.clear();
+                    playerActor.cmdListRepeat.clear();
+                    playerActor.getActions().clear();
+
+                    soundWin.play(1.0f);
+                    dialog.text("Du vandt! Vil du fortsætte?");
+                    dialog.getStyle().titleFont.getData().setScale(0.5f,0.5f);
+                    dialog.button("Næste udfordring!", 1L);
+                    dialog.button("Prøv igen", 2L);
+                    dialog.button("Nej tak", 3L);
                     dialog.show(stage);
                 }
 
@@ -590,7 +691,6 @@ public class GameScreen implements Screen {
                 amountofPoints = 1;
                 break;
         }
-
         //System.out.println(amountofPoints);
     }
 
@@ -616,6 +716,13 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        soundClick.dispose();
+        soundError.dispose();
+        soundPoint.dispose();
+        soundWin.dispose();
+        spriteBatch.dispose();
+
+        gameMap.dispose();
 
     }
 }

@@ -37,7 +37,7 @@ public class ActorClass extends Actor {
         sprite.setRotation(getRotation());
         //setDebug(true);
         sprite.draw(batch, parentAlpha);
-        sprite.rotate(90);
+        //sprite.rotate(9);
         sprite.setScale(getScaleX(), getScaleY());
 
     }

@@ -3,6 +3,7 @@ package com.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,12 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.com.jesper.jespil.Accessors.ActorAccessor;
+import com.gameObjects.ImageFileClass;
+import com.mygdx.game.MyGdxGame;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
-import com.gameObjects.ImageFileClass;
-import com.mygdx.game.MyGdxGame;
 
 import static com.badlogic.gdx.Gdx.gl20;
 
@@ -37,6 +38,8 @@ public class MenuScreen implements Screen {
     ImageFileClass ImageFileClass = new ImageFileClass();
     private SpriteBatch batch;
     SettingScreen settingScreen = new SettingScreen();
+    public Sound soundMenu = Gdx.audio.newSound(Gdx.files.internal("introsong.mp3"));
+    public Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button.mp3"));
 
     @Override
     public void render(float delta) { //update
@@ -71,6 +74,10 @@ public class MenuScreen implements Screen {
         settingScreen = new SettingScreen();
         Gdx.input.setInputProcessor(stage);
 
+
+        //soundMenu.play(1.0f);
+        //soundMenu.loop(1.0f);
+
         atlas = new TextureAtlas("ui/atlas.pack"); //Bruges til textbutton
         skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), atlas); //Bruges til textbutton
 
@@ -82,15 +89,12 @@ public class MenuScreen implements Screen {
         heading.setFontScale(2);
 
 
-
-
-
-
         //Creating button PLAY
         buttonPlay = new TextButton("PLAY", skin);
         buttonPlay.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                soundClick.play(1.0f);
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
             }
         });
@@ -101,6 +105,7 @@ public class MenuScreen implements Screen {
         buttonSettings.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
+                soundClick.play(1.0f);
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new SettingScreen());
             }
         });
@@ -112,6 +117,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 //Gdx.app.exit();
+                soundClick.play(1.0f);
                 IntroScreen introScreen = new IntroScreen();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(introScreen);
 
